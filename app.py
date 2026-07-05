@@ -614,20 +614,24 @@ st.markdown("</div>", unsafe_allow_html=True)
 # PDF REPORT GENERATION
 # -------------------------
 def generate_pdf(total, eco_score, insight):
-    file_name = "eco_report.pdf"
-    doc = SimpleDocTemplate(file_name)
-    styles = getSampleStyleSheet()
+    try:
+        file_name = "eco_report.pdf"
+        doc = SimpleDocTemplate(file_name)
+        styles = getSampleStyleSheet()
 
-    content = [
-        Paragraph("EcoBuddy AI Report", styles["Title"]),
-        Paragraph(f"Carbon Footprint: {total:.2f} kg CO₂", styles["Normal"]),
-        Paragraph(f"Eco Score: {eco_score}/100", styles["Normal"]),
-        Paragraph("Key Insight:", styles["Heading2"]),
-        Paragraph(insight, styles["Normal"])
-    ]
+        content = [
+            Paragraph("EcoBuddy AI Report", styles["Title"]),
+            Paragraph(f"Carbon Footprint: {total:.2f} kg CO₂", styles["Normal"]),
+            Paragraph(f"Eco Score: {eco_score}/100", styles["Normal"]),
+            Paragraph("Key Insight:", styles["Heading2"]),
+            Paragraph(insight, styles["Normal"])
+        ]
 
-    doc.build(content)
-    return file_name
+        doc.build(content)
+        return file_name
+    except Exception:
+        st.error("Could not generate the PDF report. Please check disk space and permissions, then try again.")
+        return None
 
 
 # -------------------------
@@ -908,12 +912,13 @@ if analyze_btn:
     # -------------------------
     report = generate_pdf(total, eco_score, insight)
 
-    with open(report, "rb") as f:
-        st.download_button(
-            "📄 Download Eco Report (PDF)",
-            f,
-            file_name="EcoBuddy_Report.pdf"
-        )
+    if report:
+        with open(report, "rb") as f:
+            st.download_button(
+                "📄 Download Eco Report (PDF)",
+                f,
+                file_name="EcoBuddy_Report.pdf"
+            )
 
 
 # -------------------------
