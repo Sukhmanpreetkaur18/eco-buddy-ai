@@ -116,9 +116,12 @@ Help users understand their carbon footprint and encourage sustainable lifestyle
 ---
 
 # Testing
+
+```bash
 python test_db.py
 python test_emissions.py
 python test_recommendations.py
+```
 
 ---
 
@@ -132,3 +135,9 @@ python test_recommendations.py
 
 #### EcoBuddy AI helps turn everyday lifestyle choices into actionable environmental insights, promoting a more sustainable future.
 ### Enjoy your eco journey!
+<div align="center">
+## ❤️ Made with Passion by [neeru24](https://github.com/neeru24)
+
+⭐ If you found this project helpful, consider giving it a star. ⭐
+
+</div>
