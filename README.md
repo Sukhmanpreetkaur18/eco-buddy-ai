@@ -116,9 +116,12 @@ Help users understand their carbon footprint and encourage sustainable lifestyle
 ---
 
 # Testing
+
+```bash
 python test_db.py
 python test_emissions.py
 python test_recommendations.py
+```
 
 ---
 
