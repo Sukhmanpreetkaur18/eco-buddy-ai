@@ -135,7 +135,9 @@ python test_recommendations.py
 
 #### EcoBuddy AI helps turn everyday lifestyle choices into actionable environmental insights, promoting a more sustainable future.
 ### Enjoy your eco journey!
+
 <div align="center">
+  
 ## ❤️ Made with Passion by [neeru24](https://github.com/neeru24)
 
 ⭐ If you found this project helpful, consider giving it a star. ⭐
