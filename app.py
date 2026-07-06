@@ -263,7 +263,8 @@ st.markdown("""
         box-shadow: 0 0 0 4px rgba(120, 169, 69, 0.14) !important;
     }
 
-    .stButton > button {
+    .stButton > button,
+    .stDownloadButton > button {
         min-height: 52px;
         padding: 0 28px !important;
         border: none !important;
@@ -277,7 +278,8 @@ st.markdown("""
         transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease !important;
     }
 
-    .stButton > button:hover {
+    .stButton > button:hover,
+    .stDownloadButton > button:hover {
         transform: translateY(-2px);
         background: #101713 !important;
         box-shadow: 0 22px 44px rgba(0, 0, 0, 0.26) !important;
@@ -416,13 +418,16 @@ st.markdown("""
         -webkit-text-fill-color: #05070a !important;
     }
 
-    .stButton > button {
+    .stButton > button,
+    .stDownloadButton > button {
         background: linear-gradient(135deg, #0b0f18, #111827) !important;
+        color: #ffffff !important;
         border: 1px solid rgba(134, 239, 172, 0.28) !important;
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32) !important;
     }
-
-    .stButton > button:hover {
+            
+    .stButton > button:hover,
+    .stDownloadButton > button:hover {
         background: linear-gradient(135deg, #111827, #0f2a1a) !important;
         border-color: rgba(134, 239, 172, 0.55) !important;
     }
