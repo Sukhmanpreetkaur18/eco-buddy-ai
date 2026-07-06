@@ -56,3 +56,60 @@ def test_save_and_get_solar_config():
     assert config['installation_cost_per_kw'] == 2000.0
     assert config['maintenance_cost_per_year'] == 150.0
     assert config['annual_rate_increase'] == 2.5
+
+def test_init_marketplace_db():
+    assert db.init_marketplace_db() is True
+
+def test_save_and_get_journey_profile():
+    db.init_marketplace_db()
+    success = db.save_journey_profile(1, "Commute", 15.0, "Car", 1, 5, True)
+    assert success is True
+    
+    profiles = db.get_journey_profiles(1)
+    assert len(profiles) == 1
+    assert profiles[0]['name'] == "Commute"
+    assert profiles[0]['distance_km'] == 15.0
+
+def test_delete_journey_profile():
+    db.init_marketplace_db()
+    db.save_journey_profile(1, "Trip", 100.0, "Bus", 1, 1, False)
+    profiles = db.get_journey_profiles(1)
+    
+    success = db.delete_journey_profile(profiles[0]['id'])
+    assert success is True
+    
+    profiles_after = db.get_journey_profiles(1)
+    assert len(profiles_after) == 0
+
+def test_save_and_get_offset_transactions():
+    db.init_marketplace_db()
+    success = db.save_offset_transaction(1, "proj_1", "Test Project", 2.5, 10.0, 25.0)
+    assert success is True
+    
+    transactions = db.get_offset_transactions(1)
+    assert len(transactions) == 1
+    assert transactions[0]['project_name'] == "Test Project"
+    assert transactions[0]['offset_tonnes'] == 2.5
+    assert transactions[0]['total_cost'] == 25.0
+
+def test_delete_offset_transaction():
+    db.init_marketplace_db()
+    db.save_offset_transaction(1, "proj_2", "Test Project 2", 1.0, 15.0, 15.0)
+    transactions = db.get_offset_transactions(1)
+    
+    success = db.delete_offset_transaction(transactions[0]['id'])
+    assert success is True
+    
+    transactions_after = db.get_offset_transactions(1)
+    assert len(transactions_after) == 0
+
+def test_get_total_offsets_and_spend():
+    db.init_marketplace_db()
+    db.save_offset_transaction(1, "proj_1", "Project 1", 2.0, 10.0, 20.0)
+    db.save_offset_transaction(1, "proj_2", "Project 2", 3.0, 15.0, 45.0)
+    
+    total_offsets = db.get_total_offsets(1)
+    total_spend = db.get_total_spend(1)
+    
+    assert total_offsets == 5.0
+    assert total_spend == 65.0

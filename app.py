@@ -8,9 +8,24 @@ import plotly.express as px
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
-from database import init_db, save_assessment, get_assessments
+from database import init_db, save_assessment, get_assessments, init_gamification_db
+import gamification as gf
 from emissions import calculate_footprint, calculate_eco_score
+
 from recommendations import generate_recommendations
+
+# Added for Route Planning & Offsets
+from database import (
+    init_marketplace_db, save_journey_profile, get_journey_profiles, delete_journey_profile,
+    save_offset_transaction, get_offset_transactions, delete_offset_transaction,
+    get_total_offsets, get_total_spend
+)
+from marketplace import (
+    calculate_trip_emissions, calculate_recurring_trip_emissions, compare_transit_modes,
+    calculate_offset_cost, validate_offset_transaction, get_offset_projects,
+    calculate_net_emissions, calculate_net_zero_progress, get_project_by_id, EMISSION_FACTORS
+)
+
 
 
 def h(text):
@@ -22,6 +37,9 @@ def h(text):
 # -------------------------
 
 init_db()
+init_gamification_db()
+init_marketplace_db()
+
 
 st.set_page_config(
     page_title="EcoBuddy",
@@ -263,7 +281,8 @@ st.markdown("""
         box-shadow: 0 0 0 4px rgba(120, 169, 69, 0.14) !important;
     }
 
-    .stButton > button {
+    .stButton > button,
+    [data-testid="stFormSubmitButton"] > button {
         min-height: 52px;
         padding: 0 28px !important;
         border: none !important;
@@ -277,7 +296,8 @@ st.markdown("""
         transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease !important;
     }
 
-    .stButton > button:hover {
+    .stButton > button:hover,
+    [data-testid="stFormSubmitButton"] > button:hover {
         transform: translateY(-2px);
         background: #101713 !important;
         box-shadow: 0 22px 44px rgba(0, 0, 0, 0.26) !important;
@@ -416,13 +436,15 @@ st.markdown("""
         -webkit-text-fill-color: #05070a !important;
     }
 
-    .stButton > button {
+    .stButton > button,
+    [data-testid="stFormSubmitButton"] > button {
         background: linear-gradient(135deg, #0b0f18, #111827) !important;
         border: 1px solid rgba(134, 239, 172, 0.28) !important;
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32) !important;
     }
 
-    .stButton > button:hover {
+    .stButton > button:hover,
+    [data-testid="stFormSubmitButton"] > button:hover {
         background: linear-gradient(135deg, #111827, #0f2a1a) !important;
         border-color: rgba(134, 239, 172, 0.55) !important;
     }
@@ -442,7 +464,7 @@ st.markdown("""
     [style*="rgb(156, 163, 175)"] {
         color: var(--muted) !important;
     }
-
+    
     [style*="#4ade80"],
     [style*="rgb(74, 222, 128)"] {
         color: var(--moss) !important;
@@ -453,7 +475,7 @@ st.markdown("""
         overflow: hidden;
         border: 1px solid var(--line);
         box-shadow: var(--shadow);
-        background: #0f172a !important;
+        background: var(--paper-strong) !important;
     }
 
     [data-testid="stDataFrame"] > div,
@@ -462,38 +484,36 @@ st.markdown("""
     [data-testid="stDataFrame"] [class*="dataframe"],
     [data-testid="stDataFrame"] [class*="glide"],
     [data-testid="stDataFrame"] [class*="table"] {
-        background: #0f172a !important;
-        color: #ffffff !important;
+        background: transparent !important;
     }
 
     [data-testid="stDataFrame"] canvas {
-        background: #0f172a !important;
+        background: transparent !important;
     }
 
     [data-testid="stDataFrame"] button,
     [data-testid="stDataFrame"] [role="button"] {
-        background: #111827 !important;
-        color: #ffffff !important;
-        border-color: rgba(134, 239, 172, 0.22) !important;
+        background: rgba(255, 255, 255, 0.8) !important;
+        color: var(--ink) !important;
+        border-color: var(--line) !important;
     }
 
     [data-testid="stDataFrame"] svg {
-        color: #ffffff !important;
-        fill: #ffffff !important;
+        color: var(--ink) !important;
+        fill: var(--ink) !important;
     }
 
     [data-testid="stDataFrame"] [role="grid"],
     [data-testid="stDataFrame"] [role="row"],
     [data-testid="stDataFrame"] [role="columnheader"],
     [data-testid="stDataFrame"] [role="gridcell"] {
-        background-color: #0f172a !important;
-        color: #ffffff !important;
-        border-color: rgba(148, 163, 184, 0.16) !important;
+        background-color: transparent !important;
+        border-color: var(--line) !important;
     }
 
     [data-testid="stDataFrame"] [role="columnheader"] {
-        background-color: #07130d !important;
-        color: #ffffff !important;
+        background-color: var(--sky-soft) !important;
+        color: var(--moss) !important;
         font-weight: 800 !important;
     }
 
@@ -566,6 +586,49 @@ st.markdown("""
             padding: 22px;
         }
     }
+
+    button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
+        color: #d1d5db !important;
+        font-weight: 600 !important;
+    }
+    
+    button[data-baseweb="tab"][aria-selected="true"] > div[data-testid="stMarkdownContainer"] > p {
+        color: #4ade80 !important;
+        font-weight: 800 !important;
+    }
+    
+    [data-testid="stExpander"] {
+        background: #0f172a !important;
+        border: 1px solid rgba(134, 239, 172, 0.28) !important;
+        border-radius: 8px !important;
+        overflow: hidden;
+    }
+    
+    [data-testid="stExpander"] details {
+        background: #0f172a !important;
+    }
+
+    [data-testid="stExpander"] summary {
+        background-color: #0f172a !important;
+    }
+    
+    [data-testid="stExpander"] summary:hover {
+        background-color: #1e293b !important;
+    }
+
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] summary p,
+    [data-testid="stExpander"] summary span,
+    [data-testid="stExpander"] summary svg {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        fill: #ffffff !important;
+    }
+    
+    [data-testid="stExpanderDetails"] {
+        background-color: #0f172a !important;
+        color: #d1d5db !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -593,7 +656,7 @@ st.markdown("---")
 # -------------------------
 # TABS CONFIGURATION
 # -------------------------
-tab1, tab2 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit"])
+tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
@@ -1279,3 +1342,173 @@ with tab2:
     </div>
     """, unsafe_allow_html=True)
 
+with tab3:
+    st.markdown("<div class='section-header'>🎮 Your Eco Journey</div>", unsafe_allow_html=True)
+    
+    # Header: Level, XP, Streak
+    total_xp = gf.get_total_xp(1)
+    level = gf.calculate_level(total_xp)
+    progress = gf.calculate_level_progress(total_xp)
+    streak = gf.calculate_streak(1, [])
+    
+    g_col1, g_col2, g_col3 = st.columns(3)
+    g_col1.metric("Current Level", f"Lvl {level}")
+    g_col2.metric("Total XP", f"{total_xp} XP")
+    g_col3.metric("Current Streak", f"{streak} Days 🔥")
+    
+    st.progress(progress, text=f"Progress to Level {level+1}")
+    
+    st.markdown("---")
+    st.markdown("### 🏆 Weekly Challenges")
+    
+    user_challenges = gf.get_user_challenges(1)
+    enrolled_ids = [c['challenge_id'] for c in user_challenges if c['status'] != 'expired']
+    
+    for ch_id, ch_data in gf.CHALLENGES.items():
+        with st.expander(f"{ch_data['title']} ({ch_data['xp']} XP) - {ch_data['category']}"):
+            st.write(f"Target: {ch_data['target']} {ch_data['unit']}")
+            if ch_id in enrolled_ids:
+                status = [c['status'] for c in user_challenges if c['challenge_id'] == ch_id][-1]
+                if status == 'completed':
+                    st.success("Challenge Completed! 🎉")
+                else:
+                    current_prog = [c['progress_value'] for c in user_challenges if c['challenge_id'] == ch_id][-1]
+                    st.write(f"Progress: {current_prog} / {ch_data['target']}")
+                    
+                    prog_val = st.number_input(f"Update Progress for {ch_id}", min_value=0.0, step=1.0, key=f"prog_{ch_id}")
+                    if st.button("Update", key=f"btn_prog_{ch_id}"):
+                        gf.update_challenge_progress(1, ch_id, progress_increment=prog_val)
+                        gf.validate_challenge_progress(1, ch_id)
+                        st.rerun()
+            else:
+                if st.button("Enroll", key=f"enroll_{ch_id}"):
+                    gf.enroll_challenge(1, ch_id)
+                    st.rerun()
+
+    st.markdown("---")
+    st.markdown("### 🎖️ Achievement Badges")
+    
+    unlocked = gf.get_unlocked_badges(1)
+    unlocked_ids = [b['badge_id'] for b in unlocked]
+    
+    cols = st.columns(len(gf.BADGES))
+    for i, (b_id, b_data) in enumerate(gf.BADGES.items()):
+        with cols[i % len(cols)]:
+            if b_id in unlocked_ids:
+                st.markdown(f"**✅ {b_data['name']}**")
+                st.caption(b_data['desc'])
+                if st.button("Share Card", key=f"share_{b_id}"):
+                    file_path = gf.generate_achievement_card(1, b_id, f"badge_{b_id}.png")
+                    if file_path:
+                        with open(file_path, "rb") as f:
+                            st.download_button("Download Card", f, file_name=f"badge_{b_id}.png", key=f"dl_{b_id}")
+            else:
+                st.markdown(f"**🔒 {b_data['name']}**")
+                st.caption(b_data['desc'])
+
+
+with tab4:
+    st.markdown("<div class='section-header'>🗺️ Route Planning & Carbon Offsets</div>", unsafe_allow_html=True)
+    st.markdown("<div class='subtitle'>Compare transit modes, track your footprint, and build a simulated offset portfolio. Note: This is a simulation and does not process real financial transactions.</div>", unsafe_allow_html=True)
+
+    route_col, offset_col = st.columns([1.2, 1])
+
+    with route_col:
+        st.subheader("📍 Transit Mode Comparison")
+        
+        with st.form("route_form"):
+            dist_val = st.number_input("Trip Distance (km)", min_value=0.1, value=15.0, step=1.0)
+            pass_val = st.number_input("Number of Passengers", min_value=1, value=1, step=1)
+            freq = st.selectbox("Trip Frequency", ["One-time", "Weekly Commute (10 trips/week)", "Daily (14 trips/week)"])
+            
+            calc_btn = st.form_submit_button("Compare Emissions")
+            
+        if calc_btn:
+            try:
+                comparisons = compare_transit_modes(dist_val, pass_val)
+                st.write(f"**Estimated Emissions for a {dist_val}km trip:**")
+                
+                # Chart
+                df_comp = pd.DataFrame(comparisons)
+                
+                # Handle frequency
+                if "Weekly" in freq:
+                    df_comp['emissions_kg'] = df_comp['emissions_kg'] * 10
+                    st.write("*Calculated for 10 trips per week*")
+                elif "Daily" in freq:
+                    df_comp['emissions_kg'] = df_comp['emissions_kg'] * 14
+                    st.write("*Calculated for 14 trips per week*")
+                    
+                fig = px.bar(df_comp, x='mode', y='emissions_kg', 
+                            title='CO2e by Transit Mode (Lower is Better)',
+                            color='emissions_kg', color_continuous_scale='Greens_r')
+                st.plotly_chart(fig, width="stretch")
+                
+                st.dataframe(df_comp.style.format({'emissions_kg': '{:.2f}'}))
+                
+            except Exception as e:
+                st.error(f"Error calculating emissions: {e}")
+
+    with offset_col:
+        st.subheader("🛒 Simulated Offset Marketplace")
+        st.info("💡 Invest your simulated eco-points to offset carbon.")
+        
+        projects = get_offset_projects()
+        proj_names = [p["name"] for p in projects]
+        selected_proj_name = st.selectbox("Select an Offset Project", proj_names)
+        
+        selected_proj = next(p for p in projects if p["name"] == selected_proj_name)
+        
+        st.markdown(f"**{selected_proj['image']} {selected_proj['name']}**")
+        st.write(f"*{selected_proj['description']}*")
+        st.write(f"**Category:** {selected_proj['category']} | **Region:** {selected_proj['region']}")
+        st.write(f"**Cost:** ${selected_proj['cost_per_tonne']:.2f} per tonne")
+        
+        with st.form("offset_form"):
+            tonnes = st.number_input("Tonnes of CO2e to Offset", min_value=0.1, value=1.0, step=0.1)
+            purchase_btn = st.form_submit_button("Purchase Simulated Offset")
+            
+            if purchase_btn:
+                is_valid, msg = validate_offset_transaction(tonnes, selected_proj["available_capacity"])
+                if is_valid:
+                    cost = calculate_offset_cost(tonnes, selected_proj["cost_per_tonne"])
+                    # Defaulting to user_id=1 for now as per instructions
+                    if save_offset_transaction(1, selected_proj["id"], selected_proj["name"], tonnes, selected_proj["cost_per_tonne"], cost):
+                        st.success(f"Simulated purchase successful! Offset {tonnes}t for ${cost:.2f}.")
+                    else:
+                        st.error("Failed to save transaction.")
+                else:
+                    st.error(msg)
+
+    st.markdown("---")
+    
+    st.markdown("<div class='section-header'>📈 Your Offset Portfolio</div>", unsafe_allow_html=True)
+    port_col1, port_col2 = st.columns([1, 2])
+    
+    with port_col1:
+        st.markdown("<div class='metric-card'>", unsafe_allow_html=True)
+        total_offsets = get_total_offsets(1)
+        total_spend = get_total_spend(1)
+        st.metric("Total Tonnes Offset", f"{total_offsets:.2f}t")
+        st.metric("Total Simulated Spend", f"${total_spend:.2f}")
+        
+        estimated_footprint = 50.0  # Just a placeholder lifetime footprint
+        net_progress = calculate_net_zero_progress(estimated_footprint, total_offsets)
+        st.metric("Net-Zero Progress (Estimated)", f"{net_progress:.1f}%")
+        st.progress(net_progress / 100)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with port_col2:
+        st.subheader("Transaction History")
+        transactions = get_offset_transactions(1)
+        if transactions:
+            df_trans = pd.DataFrame(transactions)
+            st.dataframe(df_trans[['created_at', 'project_name', 'offset_tonnes', 'total_cost', 'transaction_status']])
+            
+            # Button to clear history for demo purposes
+            if st.button("Clear History"):
+                for t in transactions:
+                    delete_offset_transaction(t['id'])
+                st.rerun()
+        else:
+            st.info("No transactions yet. Visit the marketplace to start your portfolio!")
