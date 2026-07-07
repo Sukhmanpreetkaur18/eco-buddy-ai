@@ -8,7 +8,9 @@ import plotly.express as px
 import tempfile
 import uuid
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
@@ -679,63 +681,18 @@ st.markdown("---")
 # -------------------------
 # TABS CONFIGURATION
 # -------------------------
- feature/input-validation-and-error-handling
-col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
-with col_btn2:
-    st.caption("✔ All input fields are validated before analysis.")
-    analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
-
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
- main
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
-
- feature/input-validation-and-error-handling
-    with st.spinner("🌍 Analyzing your carbon footprint..."):
-
-        progress_text = st.empty()
-        progress = st.progress(0)
-
-        progress_text.info("🔍 Validating user inputs...")
-        progress.progress(20)
-        time.sleep(0.5)  # Simulate validation delay
-
-        progress_text.info("🌍 Calculating carbon footprint...")
-        progress.progress(40)
-
-        total, contributors = calculate_footprint(
-            transport, distance, electricity, diet, flights
-        )
-
-        progress_text.info("📊 Calculation completed...")
-        progress.progress(100)
-
-        progress.empty()
-        progress_text.empty()
-
-    eco_score = calculate_eco_score(total)
-
-    insight, recommendations = generate_recommendations(
-        transport, electricity, diet, flights, contributors
-    )
-
-    save_assessment(
-        transport, distance, electricity, diet, flights, total, eco_score
-    )
-
-    st.success("✅ Analysis completed!")
-
+    
+    
+    
+    st.markdown("### Region Setting")
+    region = st.selectbox("Select Your Region for API Emissions Factor", ["Global", "US", "UK", "EU"])
     st.markdown("---")
 
-    # -------------------------
-    # RESULTS DASHBOARD
-    # -------------------------
-    st.markdown("<div class='section-header'>📊 Your Carbon Footprint Analysis</div>", unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns(3)
- main
-
     with col1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
@@ -802,7 +759,7 @@ with tab1:
 
         with st.spinner("🌍 Analyzing your carbon footprint..."):
             total, contributors = calculate_footprint(
-                transport, distance, electricity, diet, flights
+                transport, distance, electricity, diet, flights, region
             )
 
         eco_score = calculate_eco_score(total)
