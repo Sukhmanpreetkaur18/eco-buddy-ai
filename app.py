@@ -679,7 +679,7 @@ st.markdown("<div class='subtitle'>Your Personal AI-Powered Carbon Footprint Tra
 st.markdown("""
 <div style='text-align: center; margin-bottom: 32px;'>
     <div style='display: inline-flex; gap: 16px; padding: 12px 24px; background: rgba(34, 197, 94, 0.08); border-radius: 50px; border: 1px solid rgba(74, 222, 128, 0.2);'>
-        <span style='color: #d1d5db; font-size: 13px; font-weight: 600;'>✨ Track • 📊 Analyze • 💡 Improve</span>
+        <span style='color: #000; font-size: 15px; font-weight: 700;'>✨ Track • 📊 Analyze • 💡 Improve</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -697,7 +697,7 @@ with col1:
     st.markdown("""
     <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
         <span style='font-size: 24px;'>🚗</span>
-        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Transportation</span>
+        <span style='font-size: 18px; font-weight: 700; color: #000;'>Transportation</span>
     </div>
     """, unsafe_allow_html=True)
     transport = st.selectbox(
@@ -717,7 +717,7 @@ with col2:
     st.markdown("""
     <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
         <span style='font-size: 24px;'>⚡</span>
-        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Energy & Diet</span>
+        <span style='font-size: 18px; font-weight: 700; color: #000;'>Energy & Diet</span>
     </div>
     """, unsafe_allow_html=True)
     electricity = st.number_input(
@@ -736,7 +736,7 @@ with col3:
     st.markdown("""
     <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
         <span style='font-size: 24px;'>✈️</span>
-        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Travel</span>
+        <span style='font-size: 18px; font-weight: 700; color: #000;'>Travel</span>
     </div>
     """, unsafe_allow_html=True)
     flights = st.number_input(
@@ -844,7 +844,7 @@ with tab1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
             <span style='font-size: 24px;'>🚗</span>
-            <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Transportation</span>
+            <span style='font-size: 18px; font-weight: 700; color: #000;'>Transportation</span>
         </div>
         """, unsafe_allow_html=True)
         transport = st.selectbox("Primary Transport", ["Car", "Public Transport", "Bike", "Walking"])
@@ -854,7 +854,7 @@ with tab1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
             <span style='font-size: 24px;'>⚡</span>
-            <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Energy & Diet</span>
+            <span style='font-size: 18px; font-weight: 700; color: #000;'>Energy & Diet</span>
         </div>
         """, unsafe_allow_html=True)
         electricity = st.number_input("Monthly Electricity (kWh)", min_value=0.0, value=200.0, step=10.0)
@@ -864,7 +864,7 @@ with tab1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
             <span style='font-size: 24px;'>✈️</span>
-            <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Travel</span>
+            <span style='font-size: 18px; font-weight: 700; color: #000;'>Travel</span>
         </div>
         """, unsafe_allow_html=True)
         flights = st.number_input("Annual Flights", min_value=0, value=0, step=1)
