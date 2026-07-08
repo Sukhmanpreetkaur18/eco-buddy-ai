@@ -691,7 +691,6 @@ st.markdown("---")
 # INPUTS SECTION
 # -------------------------
 
- feature/reset-assessment-button
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -753,11 +752,9 @@ with col3:
 # -------------------------
 # PDF REPORT GENERATION
 
- main
 # -------------------------
 # TABS CONFIGURATION
 # -------------------------
- feature/input-validation-and-error-handling
 col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
 
 with col_btn1:
@@ -767,15 +764,13 @@ with col_btn1:
     )
 
 with col_btn2:
- feature/reset-assessment-button
+    st.caption("✔ All input fields are validated before analysis.")
     analyze_btn = st.button(
         "🌿 Analyze My Impact",
         use_container_width=True
     )
 
-
 if reset_btn:
-
     for key in DEFAULT_VALUES:
         if key in st.session_state:
             del st.session_state[key]
@@ -785,58 +780,65 @@ if reset_btn:
 
     st.caption("✔ All input fields are validated before analysis.")
     analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
- main
 
-tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
- main
+
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🌍 Carbon Footprint",
+    "⚡ Home Energy Audit",
+    "🎮 Gamification",
+    "🗺️ Route Planning & Offsets"
+])
 
 with tab1:
-    st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div class='section-header'>📝 Your Lifestyle Profile</div>",
+        unsafe_allow_html=True
+    )
 
- feature/input-validation-and-error-handling
-    with st.spinner("🌍 Analyzing your carbon footprint..."):
+    if analyze_btn:
+        with st.spinner("🌍 Analyzing your carbon footprint..."):
 
-        progress_text = st.empty()
-        progress = st.progress(0)
+            progress_text = st.empty()
+            progress = st.progress(0)
 
-        progress_text.info("🔍 Validating user inputs...")
-        progress.progress(20)
-        time.sleep(0.5)  # Simulate validation delay
+            progress_text.info("🔍 Validating user inputs...")
+            progress.progress(20)
+            time.sleep(0.5)
 
-        progress_text.info("🌍 Calculating carbon footprint...")
-        progress.progress(40)
+            progress_text.info("🌍 Calculating carbon footprint...")
+            progress.progress(40)
 
-        total, contributors = calculate_footprint(
-            transport, distance, electricity, diet, flights
+            total, contributors = calculate_footprint(
+                transport, distance, electricity, diet, flights
+            )
+
+            progress_text.info("📊 Calculation completed...")
+            progress.progress(100)
+
+            progress.empty()
+            progress_text.empty()
+
+        eco_score = calculate_eco_score(total)
+
+        insight, recommendations = generate_recommendations(
+            transport, electricity, diet, flights, contributors
         )
 
-        progress_text.info("📊 Calculation completed...")
-        progress.progress(100)
+        save_assessment(
+            transport, distance, electricity, diet, flights,
+            total, eco_score
+        )
 
-        progress.empty()
-        progress_text.empty()
+        st.success("✅ Analysis completed!")
 
-    eco_score = calculate_eco_score(total)
-
-    insight, recommendations = generate_recommendations(
-        transport, electricity, diet, flights, contributors
-    )
-
-    save_assessment(
-        transport, distance, electricity, diet, flights, total, eco_score
-    )
-
-    st.success("✅ Analysis completed!")
-
-    st.markdown("---")
-
+        st.markdown("---")
     # -------------------------
     # RESULTS DASHBOARD
     # -------------------------
     st.markdown("<div class='section-header'>📊 Your Carbon Footprint Analysis</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
- main
+
 
     with col1:
         st.markdown("""
@@ -898,7 +900,7 @@ with tab1:
     # -------------------------
     col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
     with col_btn2:
-        analyze_btn = st.button("🌿 Analyze My Impact", width="stretch")
+        analyze_btn = st.button("🌿 Analyze My Impact")
 
     if analyze_btn:
 
