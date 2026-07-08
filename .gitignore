@@ -1,3 +1,11 @@
 __pycache__/
 *.pyc
 eco_buddy.db
+*.pdf
+
+.env
+fetch_issues.py
+venv/
+
+.agent/
+AGENTS.md
