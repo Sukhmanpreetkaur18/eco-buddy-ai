@@ -45,6 +45,21 @@ init_gamification_db()
 init_marketplace_db()
 
 
+# -------------------------
+# DEFAULT FORM VALUES
+# -------------------------
+DEFAULT_VALUES = {
+    "transport": "Car",
+    "distance": 10.0,
+    "electricity": 200.0,
+    "diet": "Vegetarian",
+    "flights": 0,
+}
+
+for key, value in DEFAULT_VALUES.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
+
 st.set_page_config(
     page_title="EcoBuddy",
     page_icon="🌱",
@@ -675,23 +690,108 @@ st.markdown("---")
 # -------------------------
 # INPUTS SECTION
 # -------------------------
+<<<<<<< HEAD
+=======
+st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
+        <span style='font-size: 24px;'>🚗</span>
+        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Transportation</span>
+    </div>
+    """, unsafe_allow_html=True)
+    transport = st.selectbox(
+        "Primary Transport",
+        ["Car", "Public Transport", "Bike", "Walking"],
+        key="transport"
+    )
+    distance = st.number_input(
+        "Daily Distance (km)",
+        min_value=0.0,
+        value=10.0,
+        step=1.0,
+        key="distance"
+    )
+
+with col2:
+    st.markdown("""
+    <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
+        <span style='font-size: 24px;'>⚡</span>
+        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Energy & Diet</span>
+    </div>
+    """, unsafe_allow_html=True)
+    electricity = st.number_input(
+        "Monthly Electricity (kWh)",
+        min_value=0.0,
+        value=200.0,
+        step=10.0,
+        key="electricity"
+    )
+    diet = st.selectbox(
+        "Diet Type",
+        ["Vegetarian", "Non-Vegetarian"],
+        key="diet"
+    )
+with col3:
+    st.markdown("""
+    <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
+        <span style='font-size: 24px;'>✈️</span>
+        <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Travel</span>
+    </div>
+    """, unsafe_allow_html=True)
+    flights = st.number_input(
+        "Annual Flights",
+        min_value=0,
+        value=0,
+        step=1,
+        key="flights"
+    )
+    st.info("💡 How many long-distance flights per year?")
+
+>>>>>>> 7430caf (feat: add reset assessment button with default form restoration)
 
 # -------------------------
 # TABS CONFIGURATION
 # -------------------------
  feature/input-validation-and-error-handling
 col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
+
+with col_btn1:
+    reset_btn = st.button(
+        "🔄 Reset Assessment",
+        use_container_width=True
+    )
+
 with col_btn2:
+HEAD
     st.caption("✔ All input fields are validated before analysis.")
     analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
+    analyze_btn = st.button(
+        "🌿 Analyze My Impact",
+        use_container_width=True
+    )
+
+
+if reset_btn:
+
+    for key in DEFAULT_VALUES:
+        if key in st.session_state:
+            del st.session_state[key]
+
+    st.success("✅ Assessment form has been reset.")
+    st.rerun()
+
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
- main
+
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
- feature/input-validation-and-error-handling
+ 
     with st.spinner("🌍 Analyzing your carbon footprint..."):
 
         progress_text = st.empty()
@@ -734,7 +834,7 @@ with tab1:
     st.markdown("<div class='section-header'>📊 Your Carbon Footprint Analysis</div>", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
- main
+ 
 
     with col1:
         st.markdown("""
