@@ -8,7 +8,9 @@ import plotly.express as px
 import tempfile
 import uuid
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
@@ -17,6 +19,7 @@ import gamification as gf
 from emissions import calculate_footprint, calculate_eco_score
 
 from recommendations import generate_recommendations
+from ocr_utils import extract_text_from_file, parse_energy_consumption
 
 # Added for Route Planning & Offsets
 from database import (
@@ -43,6 +46,9 @@ def h(text):
 init_db()
 init_gamification_db()
 init_marketplace_db()
+
+if 'extracted_kwh' not in st.session_state:
+    st.session_state.extracted_kwh = 200.0
 
 
 # -------------------------
@@ -301,11 +307,8 @@ st.markdown("""
     }
 
     .stButton > button,
- fix/download-report-button-visibility
-    .stDownloadButton > button {
-
+    .stDownloadButton > button,
     [data-testid="stFormSubmitButton"] > button {
- main
         min-height: 52px;
         padding: 0 28px !important;
         border: none !important;
@@ -320,11 +323,8 @@ st.markdown("""
     }
 
     .stButton > button:hover,
- fix/download-report-button-visibility
-    .stDownloadButton > button:hover {
-
+    .stDownloadButton > button:hover,
     [data-testid="stFormSubmitButton"] > button:hover {
- main
         transform: translateY(-2px);
         background: #101713 !important;
         box-shadow: 0 22px 44px rgba(0, 0, 0, 0.26) !important;
@@ -464,25 +464,16 @@ st.markdown("""
     }
 
     .stButton > button,
- fix/download-report-button-visibility
-    .stDownloadButton > button {
-
+    .stDownloadButton > button,
     [data-testid="stFormSubmitButton"] > button {
-main
         background: linear-gradient(135deg, #0b0f18, #111827) !important;
         color: #ffffff !important;
         border: 1px solid rgba(134, 239, 172, 0.28) !important;
         box-shadow: 0 18px 40px rgba(0, 0, 0, 0.32) !important;
     }
- fix/download-report-button-visibility
-            
     .stButton > button:hover,
-    .stDownloadButton > button:hover {
-
-
-    .stButton > button:hover,
+    .stDownloadButton > button:hover,
     [data-testid="stFormSubmitButton"] > button:hover {
- main
         background: linear-gradient(135deg, #111827, #0f2a1a) !important;
         border-color: rgba(134, 239, 172, 0.55) !important;
     }
@@ -882,6 +873,52 @@ with tab1:
             "<div class='section-header'>📊 Your Carbon Footprint Analysis</div>",
             unsafe_allow_html=True,
         )
+    st.caption("✔ All input fields are validated before analysis.")
+    analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
+tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
+
+with tab1:
+    st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
+    
+    
+    
+    st.markdown("### Region Setting")
+    region = st.selectbox("Select Your Region for API Emissions Factor", ["Global", "US", "UK", "EU"])
+    st.markdown("---")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
+            <span style='font-size: 24px;'>🚗</span>
+            <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Transportation</span>
+        </div>
+        """, unsafe_allow_html=True)
+        transport = st.selectbox("Primary Transport", ["Car", "Public Transport", "Bike", "Walking"])
+        distance = st.number_input("Daily Distance (km)", min_value=0.0, value=10.0, step=1.0)
+
+    with col2:
+        st.markdown("""
+        <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
+            <span style='font-size: 24px;'>⚡</span>
+            <span style='font-size: 18px; font-weight: 700; color: #e5e7eb;'>Energy & Diet</span>
+        </div>
+        """, unsafe_allow_html=True)
+        uploaded_bill = st.file_uploader("Upload Utility Bill (PDF/Image)", type=["pdf", "png", "jpg", "jpeg"])
+        if uploaded_bill is not None:
+            # We use a button to trigger extraction so it doesn't re-run infinitely on every interaction
+            if st.button("Extract Energy Usage"):
+                with st.spinner("Extracting data from bill..."):
+                    extracted_text = extract_text_from_file(uploaded_bill)
+                    parsed_val = parse_energy_consumption(extracted_text)
+                    if parsed_val is not None:
+                        st.session_state.extracted_kwh = float(parsed_val)
+                        st.success(f"Extracted {parsed_val} kWh from bill!")
+                    else:
+                        st.warning("Could not extract energy consumption. Please enter manually.")
+
+        electricity = st.number_input("Monthly Electricity (kWh)", min_value=0.0, value=float(st.session_state.extracted_kwh), step=10.0)
+        diet = st.selectbox("Diet Type", ["Vegetarian", "Non-Vegetarian"])
 
         col1, col2 = st.columns(2)
 
@@ -938,7 +975,7 @@ with tab1:
 
         with st.spinner("🌍 Analyzing your carbon footprint..."):
             total, contributors = calculate_footprint(
-                transport, distance, electricity, diet, flights
+                transport, distance, electricity, diet, flights, region
             )
 
         eco_score = calculate_eco_score(total)
