@@ -763,12 +763,116 @@ with col_btn2:
 
 if reset_btn:
     for key in DEFAULT_VALUES:
-        if key in st.session_state:
-            del st.session_state[key]
+        st.session_state.pop(key, None)
+
+    st.session_state.pop("analysis", None)
 
     st.success("✅ Assessment form has been reset.")
     st.rerun()
 
+
+
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🌍 Carbon Footprint",
+    "⚡ Home Energy Audit",
+    "🎮 Gamification",
+    "🗺️ Route Planning & Offsets"
+])
+
+with tab1:
+    st.markdown(
+        "<div class='section-header'>📝 Your Lifestyle Profile</div>",
+        unsafe_allow_html=True
+    )
+
+    # Run analysis when button is clicked
+    if analyze_btn:
+        with st.spinner("🌍 Analyzing your carbon footprint..."):
+
+            progress_text = st.empty()
+            progress = st.progress(0)
+
+            progress_text.info("🔍 Validating user inputs...")
+            progress.progress(20)
+            time.sleep(0.5)
+
+            progress_text.info("🌍 Calculating carbon footprint...")
+            progress.progress(40)
+
+            total, contributors = calculate_footprint(
+                transport,
+                distance,
+                electricity,
+                diet,
+                flights,
+            )
+
+            progress_text.info("📊 Calculation completed...")
+            progress.progress(100)
+
+            progress.empty()
+            progress_text.empty()
+
+        eco_score = calculate_eco_score(total)
+
+        insight, recommendations = generate_recommendations(
+            transport,
+            electricity,
+            diet,
+            flights,
+            contributors,
+        )
+
+        save_assessment(
+            transport,
+            distance,
+            electricity,
+            diet,
+            flights,
+            total,
+            eco_score,
+        )
+
+        # Store results
+        st.session_state.analysis = {
+            "transport": transport,
+            "distance": distance,
+            "electricity": electricity,
+            "diet": diet,
+            "flights": flights,
+            "total": total,
+            "eco_score": eco_score,
+            "contributors": contributors,
+            "insight": insight,
+            "recommendations": recommendations,
+        }
+
+    # Display only if analysis exists
+    if "analysis" in st.session_state:
+
+        data = st.session_state.analysis
+
+        st.markdown("### 👤 Your Inputs")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            st.write(f"**🚗 Transport:** {data['transport']}")
+            st.write(f"**📍 Daily Distance:** {data['distance']} km")
+            st.write(f"**⚡ Electricity:** {data['electricity']} kWh")
+
+        with c2:
+            st.write(f"**🥗 Diet:** {data['diet']}")
+            st.write(f"**✈️ Annual Flights:** {data['flights']}")
+
+        st.success("✅ Analysis completed!")
+
+        st.markdown("---")
+
+        st.markdown(
+            "<div class='section-header'>📊 Your Carbon Footprint Analysis</div>",
+            unsafe_allow_html=True,
+        )
     st.caption("✔ All input fields are validated before analysis.")
     analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
 
@@ -876,6 +980,7 @@ with tab1:
         electricity = st.number_input("Monthly Electricity (kWh)", min_value=0.0, value=float(st.session_state.extracted_kwh), step=10.0)
         diet = st.selectbox("Diet Type", ["Vegetarian", "Non-Vegetarian"])
 
+        col1, col2 = st.columns(2)
     with col3:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
@@ -886,8 +991,25 @@ with tab1:
         flights = st.number_input("Annual Flights", min_value=0, value=0, step=1)
         st.info("💡 How many long-distance flights per year?")
 
+        with col1:
+            st.metric(
+                "🌍 Total Footprint",
+                f"{data['total']:.2f} kg CO₂"
+            )
 
-    # -------------------------
+        with col2:
+            st.metric(
+                "🌱 Eco Score",
+                f"{data['eco_score']}/100"
+            )
+
+        st.markdown("### 💡 AI Insight")
+        st.info(data["insight"])
+
+        st.markdown("### 🌱 Recommendations")
+
+        for rec in data["recommendations"]:
+            st.success(rec)    
     # PDF REPORT GENERATION
     # -------------------------
     def generate_pdf(total, eco_score, insight):
@@ -914,6 +1036,9 @@ with tab1:
     # -------------------------
     # CALCULATE & ANALYZE
     # -------------------------
+    # col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
+    # with col_btn2:
+    #     analyze_btn = st.button("🌿 Analyze My Impact")
     col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
     with col_btn2:
         analyze_btn = st.button("🌿 Analyze My Impact")
@@ -939,10 +1064,6 @@ with tab1:
 
         st.markdown("---")
 
-        # -------------------------
-        # RESULTS DASHBOARD
-        # -------------------------
-        st.markdown("<div class='section-header'>📊 Your Carbon Footprint Analysis</div>", unsafe_allow_html=True)
 
         # Top metrics row
         met1, met2, met3, met4 = st.columns(4)
