@@ -763,178 +763,10 @@ with col_btn2:
 
 if reset_btn:
     for key in DEFAULT_VALUES:
-        st.session_state.pop(key, None)
-
-    st.session_state.pop("analysis", None)
-
+        if key in st.session_state:
+            del st.session_state[key]
     st.success("✅ Assessment form has been reset.")
     st.rerun()
-
-
-
-tab1, tab2, tab3, tab4 = st.tabs([
-    "🌍 Carbon Footprint",
-    "⚡ Home Energy Audit",
-    "🎮 Gamification",
-    "🗺️ Route Planning & Offsets"
-])
-
-with tab1:
-    st.markdown(
-        "<div class='section-header'>📝 Your Lifestyle Profile</div>",
-        unsafe_allow_html=True
-    )
-
-    # Run analysis when button is clicked
-    if analyze_btn:
-        with st.spinner("🌍 Analyzing your carbon footprint..."):
-
-            progress_text = st.empty()
-            progress = st.progress(0)
-
-            progress_text.info("🔍 Validating user inputs...")
-            progress.progress(20)
-            time.sleep(0.5)
-
-            progress_text.info("🌍 Calculating carbon footprint...")
-            progress.progress(40)
-
-            total, contributors = calculate_footprint(
-                transport,
-                distance,
-                electricity,
-                diet,
-                flights,
-            )
-
-            progress_text.info("📊 Calculation completed...")
-            progress.progress(100)
-
-            progress.empty()
-            progress_text.empty()
-
-        eco_score = calculate_eco_score(total)
-
-        insight, recommendations = generate_recommendations(
-            transport,
-            electricity,
-            diet,
-            flights,
-            contributors,
-        )
-
-        save_assessment(
-            transport,
-            distance,
-            electricity,
-            diet,
-            flights,
-            total,
-            eco_score,
-        )
-
-        # Store results
-        st.session_state.analysis = {
-            "transport": transport,
-            "distance": distance,
-            "electricity": electricity,
-            "diet": diet,
-            "flights": flights,
-            "total": total,
-            "eco_score": eco_score,
-            "contributors": contributors,
-            "insight": insight,
-            "recommendations": recommendations,
-        }
-
-    # Display only if analysis exists
-    if "analysis" in st.session_state:
-
-        data = st.session_state.analysis
-
-        st.markdown("### 👤 Your Inputs")
-
-        c1, c2 = st.columns(2)
-
-        with c1:
-            st.write(f"**🚗 Transport:** {data['transport']}")
-            st.write(f"**📍 Daily Distance:** {data['distance']} km")
-            st.write(f"**⚡ Electricity:** {data['electricity']} kWh")
-
-        with c2:
-            st.write(f"**🥗 Diet:** {data['diet']}")
-            st.write(f"**✈️ Annual Flights:** {data['flights']}")
-
-        st.success("✅ Analysis completed!")
-
-        st.markdown("---")
-
-        st.markdown(
-            "<div class='section-header'>📊 Your Carbon Footprint Analysis</div>",
-            unsafe_allow_html=True,
-        )
-    st.caption("✔ All input fields are validated before analysis.")
-    analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
-
-
-tab1, tab2, tab3, tab4 = st.tabs([
-    "🌍 Carbon Footprint",
-    "⚡ Home Energy Audit",
-    "🎮 Gamification",
-    "🗺️ Route Planning & Offsets"
-])
-
-with tab1:
-    st.markdown(
-        "<div class='section-header'>📝 Your Lifestyle Profile</div>",
-        unsafe_allow_html=True
-    )
-
-    if analyze_btn:
-        with st.spinner("🌍 Analyzing your carbon footprint..."):
-
-            progress_text = st.empty()
-            progress = st.progress(0)
-
-            progress_text.info("🔍 Validating user inputs...")
-            progress.progress(20)
-            time.sleep(0.5)
-
-            progress_text.info("🌍 Calculating carbon footprint...")
-            progress.progress(40)
-
-            total, contributors = calculate_footprint(
-                transport, distance, electricity, diet, flights
-            )
-
-            progress_text.info("📊 Calculation completed...")
-            progress.progress(100)
-
-            progress.empty()
-            progress_text.empty()
-
-        eco_score = calculate_eco_score(total)
-
-        insight, recommendations = generate_recommendations(
-            transport, electricity, diet, flights, contributors
-        )
-
-        save_assessment(
-            transport, distance, electricity, diet, flights,
-            total, eco_score
-        )
-
-        st.success("✅ Analysis completed!")
-
-        st.markdown("---")
-    # -------------------------
-    # RESULTS DASHBOARD
-    # -------------------------
-    st.markdown("<div class='section-header'>📊 Your Carbon Footprint Analysis</div>", unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns(3)
-
-
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
 with tab1:
@@ -1041,7 +873,7 @@ with tab1:
     #     analyze_btn = st.button("🌿 Analyze My Impact")
     col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
     with col_btn2:
-        analyze_btn = st.button("🌿 Analyze My Impact")
+        analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
 
     if analyze_btn:
 
