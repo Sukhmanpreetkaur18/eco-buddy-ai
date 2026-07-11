@@ -43,9 +43,13 @@ def h(text):
 # INIT
 # -------------------------
 
-init_db()
-init_gamification_db()
-init_marketplace_db()
+@st.cache_resource
+def run_db_initializations():
+    init_db()
+    init_gamification_db()
+    init_marketplace_db()
+
+run_db_initializations()
 
 if 'extracted_kwh' not in st.session_state:
     st.session_state.extracted_kwh = 200.0
@@ -991,25 +995,29 @@ with tab1:
         flights = st.number_input("Annual Flights", min_value=0, value=0, step=1)
         st.info("💡 How many long-distance flights per year?")
 
-        with col1:
-            st.metric(
-                "🌍 Total Footprint",
-                f"{data['total']:.2f} kg CO₂"
-            )
+        if "analysis" in st.session_state:
+            data = st.session_state.analysis
+            with col1:
+                st.metric(
+                    "🌍 Total Footprint",
+                    f"{data['total']:.2f} kg CO₂"
+                )
 
-        with col2:
-            st.metric(
-                "🌱 Eco Score",
-                f"{data['eco_score']}/100"
-            )
+            with col2:
+                st.metric(
+                    "🌱 Eco Score",
+                    f"{data['eco_score']}/100"
+                )
 
-        st.markdown("### 💡 AI Insight")
-        st.info(data["insight"])
+            st.markdown("### 💡 AI Insight")
+            st.info(data["insight"])
 
-        st.markdown("### 🌱 Recommendations")
+            st.markdown("### 🌱 Recommendations")
 
-        for rec in data["recommendations"]:
-            st.success(rec)    
+            for rec in data["recommendations"]:
+                st.success(rec)
+        else:
+            st.info("💡 Complete your lifestyle profile above to see your footprint analysis.")
     # PDF REPORT GENERATION
     # -------------------------
     def generate_pdf(total, eco_score, insight):
