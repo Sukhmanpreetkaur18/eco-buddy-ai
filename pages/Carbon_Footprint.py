@@ -21,6 +21,44 @@ apply_theme()
 st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 st.markdown("### Region Setting")
 region = st.selectbox("Select Your Region for API Emissions Factor", ["Global", "US", "UK", "EU"])
+
+# -------------------------
+# QUICK LOG (AI)
+# -------------------------
+st.markdown("### 🤖 AI Quick Log")
+col_ai_input, col_ai_btn = st.columns([4, 1], vertical_alignment="bottom")
+with col_ai_input:
+    quick_log_text = st.text_area("Let AI auto-fill your profile! Describe your day naturally.", placeholder="e.g., 'I drove 15 miles in my SUV and had a beef steak'", key="quick_log_input", height=68)
+with col_ai_btn:
+    parse_btn = st.button("✨ Parse with AI", use_container_width=True)
+    
+if parse_btn:
+    if quick_log_text.strip():
+        with st.spinner("Analyzing text..."):
+            parsed_data = parse_quick_log(quick_log_text)
+            if parsed_data:
+                st.session_state.temp_parsed = parsed_data
+            else:
+                st.error("Could not parse the text. Please try again.")
+    else:
+        st.warning("Please enter some text first.")
+
+if "temp_parsed" in st.session_state:
+    tp = st.session_state.temp_parsed
+    st.info(f"**We found:** {tp.get('distance', 10.0)} km by {tp.get('transport', 'Car')}, and {tp.get('diet', 'Vegetarian')} diet. Is this correct?")
+    c_yes, c_no = st.columns(2)
+    with c_yes:
+        if st.button("✅ Yes, use this", key="confirm_yes"):
+            st.session_state.transport = tp.get('transport', 'Car')
+            st.session_state.distance = float(tp.get('distance', 10.0))
+            st.session_state.diet = tp.get('diet', 'Vegetarian')
+            del st.session_state.temp_parsed
+            st.rerun()
+    with c_no:
+        if st.button("❌ No, cancel", key="confirm_no"):
+            del st.session_state.temp_parsed
+            st.rerun()
+
 st.markdown("---")
 
 col1, col2, col3 = st.columns(3)
