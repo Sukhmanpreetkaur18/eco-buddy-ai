@@ -342,7 +342,8 @@ st.markdown("""
         background: rgba(172, 214, 111, 0.26) !important;
     }
 
-    /* DARK PREMIUM THEME OVERRIDES 
+    @media (prefers-color-scheme: dark) {
+    /* DARK PREMIUM THEME OVERRIDES */
     :root {
         --sky: #8ec5ff;
         --sky-soft: #18273a;
@@ -648,7 +649,8 @@ st.markdown("""
     [data-testid="stExpanderDetails"] {
         background-color: #0f172a !important;
         color: #d1d5db !important;
-    }*/
+    }
+    } /* end @media (prefers-color-scheme: dark) */
 </style>
 """, unsafe_allow_html=True)
 
