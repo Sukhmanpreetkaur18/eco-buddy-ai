@@ -92,9 +92,15 @@ class TestEmissions(unittest.TestCase):
         self.assertAlmostEqual(contributors["Flights"], 500.0, places=1)
 
     def test_eco_score(self):
-        self.assertEqual(calculate_eco_score(1500), 95)
-        self.assertEqual(calculate_eco_score(3500), 65)
-        self.assertEqual(calculate_eco_score(6000), 35)
+        self.assertEqual(calculate_eco_score(1500), 92)
+        self.assertEqual(calculate_eco_score(3500), 62)
+        self.assertEqual(calculate_eco_score(6000), 12)
+
+    def test_eco_score_weighted(self):
+        # With contributors
+        contributors = {"Transport": 1000, "Electricity": 1000, "Diet": 500, "Flights": 500}
+        score = calculate_eco_score(3000, contributors)
+        self.assertTrue(0 <= score <= 100)
 
 if __name__ == "__main__":
     unittest.main()

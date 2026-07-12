@@ -114,3 +114,30 @@ def generate_recommendations(
         )
 
     return insight, recommendations
+
+def generate_water_recommendations(contributors, total_daily, diet):
+    recommendations = []
+    
+    highest_category = max(contributors, key=contributors.get)
+    insight = f"Your biggest water consumer is {highest_category} ({contributors[highest_category]:.0f} L/day)."
+    
+    if contributors.get("Shower", 0) > 100:
+        recommendations.append("🚿 Try reducing your shower time to under 10 minutes to save significant water.")
+    else:
+        recommendations.append("🚿 Your shower water usage is efficient. Keep it up!")
+        
+    if contributors.get("Laundry", 0) > 50:
+        recommendations.append("👕 Only run full loads of laundry to maximize water efficiency.")
+        
+    if contributors.get("Garden", 0) > 100:
+        recommendations.append("🌻 Consider collecting rainwater or using drought-resistant plants for your garden.")
+        
+    if diet in ["Omnivore", "Heavy Meat"]:
+        recommendations.append("🥩 A large portion of your water footprint comes from the 'virtual water' in meat production. Consider substituting a few meat meals with plant-based alternatives.")
+    
+    if total_daily > 3800:
+        recommendations.insert(0, "💧 Your water footprint is above the global average. Focus on reducing your highest consumption areas.")
+    else:
+        recommendations.insert(0, "💧 Great job! Your water footprint is below or near the global average.")
+        
+    return insight, recommendations

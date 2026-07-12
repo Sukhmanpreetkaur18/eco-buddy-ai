@@ -1,7 +1,8 @@
 import os
 import requests
 import streamlit as st
-
+import math
+from config import ECO_SCORE_BASELINE, ECO_SCORE_SENSITIVITY, CATEGORY_WEIGHTS
 VALID_TRANSPORT = {"Car", "Bike", "Public Transport", "Walking"}
 VALID_DIET = {"Vegetarian", "Non-Vegetarian"}
 VALID_REGIONS = {"Global", "US", "UK", "EU"}
@@ -126,17 +127,23 @@ def calculate_footprint(
 
     return round(total, 2), contributors
 
-def calculate_eco_score(total_footprint):
+def calculate_eco_score(total_footprint, contributors=None):
     """
     Higher score = better sustainability
+    Calculates a continuous score based on a sigmoid function.
+    Supports per-category weighting if contributors are provided.
     """
-    if total_footprint <= 2000:
-        return 95
-    elif total_footprint <= 3000:
-        return 80
-    elif total_footprint <= 4000:
-        return 65
-    elif total_footprint <= 5000:
-        return 50
+    if contributors:
+        weighted_score = 0.0
+        for category, cat_total in contributors.items():
+            weight = CATEGORY_WEIGHTS.get(category, 0.0)
+            if weight > 0:
+                cat_baseline = ECO_SCORE_BASELINE * weight
+                cat_sensitivity = ECO_SCORE_SENSITIVITY * weight
+                cat_score = 100 / (1 + math.exp((cat_total - cat_baseline) / cat_sensitivity))
+                weighted_score += weight * cat_score
+        return int(round(weighted_score))
     else:
-        return 35
+        # Fallback to overall continuous score
+        score = 100 / (1 + math.exp((total_footprint - ECO_SCORE_BASELINE) / ECO_SCORE_SENSITIVITY))
+        return int(round(score))

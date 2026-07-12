@@ -658,7 +658,7 @@ if analyze_btn:
             transport, distance, electricity, diet, flights
         )
 
-    eco_score = calculate_eco_score(total)
+    eco_score = calculate_eco_score(total, contributors)
 
     insight, recommendations = generate_recommendations(
         transport, electricity, diet, flights, contributors
