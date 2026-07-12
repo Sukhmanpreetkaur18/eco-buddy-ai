@@ -689,6 +689,7 @@ with tab1:
     with col_ai_input:
         quick_log_text = st.text_area("Let AI auto-fill your profile! Describe your day naturally.", placeholder="e.g., 'I drove 15 miles in my SUV and had a beef steak'", key="quick_log_input", height=68)
     with col_ai_btn:
+        st.markdown("<div style='height:30px;'></div>", unsafe_allow_html=True)
         parse_btn = st.button("✨ Parse with AI", use_container_width=True)
         
     if parse_btn:
