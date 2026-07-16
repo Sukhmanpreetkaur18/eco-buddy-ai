@@ -693,6 +693,7 @@ if reset_btn:
             del st.session_state[key]
     st.success("✅ Assessment form has been reset.")
     st.rerun()
+
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
 with tab1:
@@ -709,6 +710,7 @@ with tab1:
     with col_ai_input:
         quick_log_text = st.text_area("Let AI auto-fill your profile! Describe your day naturally.", placeholder="e.g., 'I drove 15 miles in my SUV and had a beef steak'", key="quick_log_input", height=68)
     with col_ai_btn:
+        st.markdown("<div style='height:30px;'></div>", unsafe_allow_html=True)
         parse_btn = st.button("✨ Parse with AI", use_container_width=True)
         
     if parse_btn:
@@ -967,6 +969,9 @@ with tab1:
                     borderwidth=1
                 )
             )
+
+            st.plotly_chart(fig, width="stretch", config={'displayModeBar': False})
+
 
             st.plotly_chart(fig, width="stretch", config={'displayModeBar': False})
 
