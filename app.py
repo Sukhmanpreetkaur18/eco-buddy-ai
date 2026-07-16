@@ -1785,3 +1785,79 @@ st.success(
     "Complete the lifestyle form above and click **Analyze My Impact** "
     "to generate your first carbon footprint assessment."
 )
+st.markdown("""
+<style>
+.footer{
+    margin-top:60px;
+
+    /* Stretch outside Streamlit container */
+    width:100vw;
+    margin-left:calc(50% - 50vw);
+    margin-right:calc(50% - 50vw);
+    margin-bottom:-60px;
+
+    padding:50px 30px 25px;
+
+    background:linear-gradient(135deg,#010b07 0%,#04140d 45%,#071c13 100%);
+    color:white;
+    text-align:center;
+
+    box-shadow:0 -12px 35px rgba(0,0,0,.35);
+}
+
+.footer h2{
+    color:white;
+    font-size:38px;
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.footer p{
+    margin:12px 0;
+    color:#d1fae5;
+    font-size:16px;
+}
+
+.footer hr{
+    border:none;
+    height:1px;
+    background:rgba(255,255,255,.12);
+    margin:28px auto 18px;
+    width:90%;
+}
+
+.footer-bottom{
+    color:#9CA3AF;
+    font-size:14px;
+}
+</style>
+
+<div class="footer">
+
+<h2>🌱 EcoBuddy AI+</h2>
+
+<p>
+Your Personal AI-Powered Carbon Footprint Tracker &amp; Eco Assistant.
+</p>
+
+<p>
+💚 <b>Track</b> &nbsp; • &nbsp;
+📊 <b>Analyze</b> &nbsp; • &nbsp;
+💡 <b>Improve</b>
+</p>
+
+<p>
+Built with ❤️ using <b>Streamlit</b>,
+<b>Google Gemini</b>,
+<b>Python</b>,
+and <b>Pandas</b>.
+</p>
+
+<hr>
+
+<div class="footer-bottom">
+© 2026 EcoBuddy AI+. Encouraging sustainable living, one step at a time.
+</div>
+
+</div>
+""", unsafe_allow_html=True)
