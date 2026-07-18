@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-DB_NAME = "eco_buddy.db"
+DB_NAME = os.getenv("ECO_BUDDY_DB", "eco_buddy.db")
 
 
 def init_db():
