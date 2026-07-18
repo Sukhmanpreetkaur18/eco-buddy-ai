@@ -128,15 +128,24 @@ def generate_achievement_card(user_id, badge_id, filename="badge_card.png"):
     draw = ImageDraw.Draw(img)
     
     # Try to load fonts
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(base_dir, "assets", "fonts", "DejaVuSans.ttf")
+    
     try:
-        title_font = ImageFont.truetype("arial.ttf", 36)
-        desc_font = ImageFont.truetype("arial.ttf", 24)
-        brand_font = ImageFont.truetype("arial.ttf", 20)
+        title_font = ImageFont.truetype(font_path, 36)
+        desc_font = ImageFont.truetype(font_path, 24)
+        brand_font = ImageFont.truetype(font_path, 20)
     except IOError:
-        # Fallback to default font
-        title_font = ImageFont.load_default()
-        desc_font = ImageFont.load_default()
-        brand_font = ImageFont.load_default()
+        try:
+            # Fallback to system Arial font if bundled font is somehow missing
+            title_font = ImageFont.truetype("arial.ttf", 36)
+            desc_font = ImageFont.truetype("arial.ttf", 24)
+            brand_font = ImageFont.truetype("arial.ttf", 20)
+        except IOError:
+            # Fallback to default font
+            title_font = ImageFont.load_default()
+            desc_font = ImageFont.load_default()
+            brand_font = ImageFont.load_default()
         
     total_xp = get_total_xp(user_id)
     level = calculate_level(total_xp)
