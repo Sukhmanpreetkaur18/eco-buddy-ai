@@ -1,5 +1,6 @@
 import math
 import os
+import streamlit as st
 import datetime
 from PIL import Image, ImageDraw, ImageFont
 
@@ -24,11 +25,13 @@ BADGES = {
     'b4': {'name': 'Plant-Based Week', 'desc': 'Avoided non-vegetarian meals for 7 days', 'xp': 50}
 }
 
+@st.cache_data
 def calculate_level(total_xp):
     if total_xp < 0:
         return 1
     return math.floor(math.sqrt(total_xp / 100)) + 1
 
+@st.cache_data
 def calculate_level_progress(total_xp):
     current_level = calculate_level(total_xp)
     next_level = current_level + 1
@@ -45,6 +48,7 @@ def calculate_level_progress(total_xp):
          
     return progress
 
+@st.cache_data
 def calculate_streak(user_id, activities_dates):
     # Adjust check to allow yesterday's log to keep streak alive (#86).
     # If the most recent log was yesterday, the streak remains active;

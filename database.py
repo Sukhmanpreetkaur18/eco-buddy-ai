@@ -578,6 +578,21 @@ def delete_offset_transaction(transaction_id):
         if conn:
             conn.close()
 
+def clear_offset_transactions(user_id):
+    conn = None
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM offset_transactions WHERE user_id = ?', (user_id,))
+        conn.commit()
+        return True
+    except Exception:
+        return False
+    finally:
+        if conn:
+            conn.close()
+
 def get_total_offsets(user_id):
     conn = None
     try:
