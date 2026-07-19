@@ -223,8 +223,16 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ---
 
+ feature/input-validation-and-error-handling
+#### EcoBuddy AI helps turn everyday lifestyle choices into actionable environmental insights, promoting a more sustainable future.
+### Enjoy your eco journey!
+
+<div align="center">
+  
+
 <div align="center">
 
+ main
 ## ❤️ Made with Passion by [neeru24](https://github.com/neeru24)
 
 If you found this project useful, please consider giving it a ⭐ on GitHub.
