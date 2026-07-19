@@ -49,6 +49,7 @@ with st.expander("➕ Add New Appliance", expanded=False):
             st.rerun()
 
 appliances = db.get_appliances()
+df = pd.DataFrame(appliances)
 if appliances:
     # Build a styled HTML table instead of st.dataframe
     category_icons = {"AC": "❄️", "EV Charger": "🔋", "Heat Pump": "🌡️", "Refrigerator": "🧊", "Lighting": "💡", "Other": "🔌"}
@@ -64,6 +65,12 @@ if appliances:
             <td style='text-align:right;'>{a['hours_used_per_day']:.1f} h</td>
             <td style='text-align:right;'>{a['standby_draw_watts']:.1f} W</td>
         </tr>"""
+    st.download_button(
+        "📥 Download Appliance Inventory (CSV)",
+        data=df.to_csv(index=False),
+        file_name="appliance_inventory.csv",
+        mime="text/csv",
+    )
 
     st.markdown(f"""
     <div style='border:1px solid rgba(134,239,172,0.24); border-radius:16px; overflow:hidden; background:#0f172a; box-shadow:0 24px 70px rgba(0,0,0,0.38);'>
@@ -95,6 +102,24 @@ if appliances:
 
     # Calculate summaries
     daily_kwh, monthly_kwh, yearly_kwh = ea.calculate_home_energy_summary(appliances)
+    summary_df = pd.DataFrame({
+    "Metric": [
+        "Daily Consumption",
+        "Monthly Consumption",
+        "Yearly Consumption"
+    ],
+    "Value": [
+        daily_kwh,
+        monthly_kwh,
+        yearly_kwh
+    ]
+})
+    st.download_button(
+    "📥 Download Energy Summary (CSV)",
+    summary_df.to_csv(index=False),
+    "energy_summary.csv",
+    "text/csv",
+)
 
     st.markdown("### 📊 Energy Patterns")
     sc1, sc2, sc3 = st.columns(3)
@@ -104,6 +129,16 @@ if appliances:
 
     # Hourly profile chart
     profile = ea.generate_hourly_energy_profile(appliances)
+    profile_df = pd.DataFrame({
+    "Hour": list(range(24)),
+    "Energy (kWh)": profile
+})
+    st.download_button(
+    "📥 Download Hourly Profile (CSV)",
+    profile_df.to_csv(index=False),
+    "hourly_profile.csv",
+    "text/csv",
+)
     fig_hr = go.Figure(data=[go.Bar(x=list(range(24)), y=profile, marker_color='#fbbf24')])
     fig_hr.update_layout(title="Hourly Energy Demand (kWh)", xaxis_title="Hour of Day", yaxis_title="kWh", template="plotly_dark", paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_hr, width="stretch")
@@ -152,4 +187,29 @@ st.markdown(f"""
     <span style='color:#e5e7eb; font-size:15px;'>Over 20 years, you could save <b style="color:#4ade80;">${savings_20y:,.0f}</b> and offset <b style="color:#4ade80;">{carbon_offset:,.0f} kg CO₂</b> annually.</span>
 </div>
 """, unsafe_allow_html=True)
+
+solar_df = pd.DataFrame({
+    "Metric": [
+        "System Size",
+        "Annual Generation",
+        "Installation Cost",
+        "Payback Period",
+        "20-Year Savings",
+        "Carbon Offset"
+    ],
+    "Value": [
+        sys_size,
+        ann_gen,
+        inst_cost,
+        payback,
+        savings_20y,
+        carbon_offset
+    ]
+})
+st.download_button(
+    "📥 Download Solar ROI (CSV)",
+    solar_df.to_csv(index=False),
+    "solar_roi.csv",
+    "text/csv",
+)
 
