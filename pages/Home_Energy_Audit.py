@@ -17,7 +17,13 @@ import gamification as gf
 from marketplace import *
 import energy_audit as ea
 
-from styles.theme import apply_theme
+from styles.theme import (
+    apply_theme,
+    render_empty_state,
+    render_info_card,
+    render_appliance_table,
+)
+
 apply_theme()
 
 import database as db
@@ -65,23 +71,7 @@ if appliances:
             <td style='text-align:right;'>{a['standby_draw_watts']:.1f} W</td>
         </tr>"""
 
-    st.markdown(f"""
-    <div style='border:1px solid rgba(134,239,172,0.24); border-radius:16px; overflow:hidden; background:#0f172a; box-shadow:0 24px 70px rgba(0,0,0,0.38);'>
-        <table style='width:100%; border-collapse:collapse; color:#fff; font-size:15px;'>
-            <thead>
-                <tr style='background:#07130d;'>
-                    <th style='padding:14px 18px; text-align:left; font-weight:700; color:#86efac;'>Appliance</th>
-                    <th style='padding:14px 18px; text-align:left; font-weight:700; color:#86efac;'>Category</th>
-                    <th style='padding:14px 18px; text-align:center; font-weight:700; color:#86efac;'>Qty</th>
-                    <th style='padding:14px 18px; text-align:right; font-weight:700; color:#86efac;'>Power</th>
-                    <th style='padding:14px 18px; text-align:right; font-weight:700; color:#86efac;'>Hours/Day</th>
-                    <th style='padding:14px 18px; text-align:right; font-weight:700; color:#86efac;'>Standby</th>
-                </tr>
-            </thead>
-            <tbody>{table_rows}</tbody>
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
+    render_appliance_table(table_rows)
 
     # Delete appliance controls
     st.markdown("")
@@ -109,13 +99,11 @@ if appliances:
     st.plotly_chart(fig_hr, width="stretch")
 
 else:
-    st.markdown("""
-    <div style='text-align:center; padding:48px 24px; border:1px dashed rgba(134,239,172,0.3); border-radius:16px; background:rgba(15,23,42,0.5);'>
-        <div style='font-size:48px; margin-bottom:12px;'>🔌</div>
-        <div style='font-size:18px; font-weight:600; color:#e5e7eb; margin-bottom:8px;'>No Appliances Yet</div>
-        <div style='font-size:14px; color:#94a3b8;'>Click <b>"➕ Add New Appliance"</b> above to register your first household appliance and start tracking energy consumption.</div>
-    </div>
-    """, unsafe_allow_html=True)
+    render_empty_state(
+    icon="🔌",
+    title="No Appliances Yet",
+    message='Click <b>"➕ Add New Appliance"</b> above to register your first household appliance and start tracking energy consumption.'
+)
 
 st.markdown("---")
 st.markdown("### ☀️ Solar ROI Calculator")
@@ -146,10 +134,7 @@ r2.metric("Annual Generation", f"{ann_gen:.0f} kWh")
 r3.metric("Est. Installation", f"${inst_cost:,.0f}")
 r4.metric("Payback Period", f"{payback:.1f} years" if payback != float('inf') else "N/A")
 
-st.markdown(f"""
-<div style='padding:18px 24px; border-radius:14px; background:linear-gradient(135deg, rgba(34,197,94,0.15), rgba(74,222,128,0.08)); border:1px solid rgba(74,222,128,0.3); margin-top:8px;'>
-    <span style='font-size:18px;'>💡</span>
-    <span style='color:#e5e7eb; font-size:15px;'>Over 20 years, you could save <b style="color:#4ade80;">${savings_20y:,.0f}</b> and offset <b style="color:#4ade80;">{carbon_offset:,.0f} kg CO₂</b> annually.</span>
-</div>
-""", unsafe_allow_html=True)
+render_info_card(
+    f'Over 20 years, you could save <b style="color:#4ade80;">${savings_20y:,.0f}</b> and offset <b style="color:#4ade80;">{carbon_offset:,.0f} kg CO₂</b> annually.'
+)
 
