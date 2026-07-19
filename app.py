@@ -1472,7 +1472,9 @@ with tab3:
     total_xp = gf.get_total_xp(1)
     level = gf.calculate_level(total_xp)
     progress = gf.calculate_level_progress(total_xp)
-    streak = gf.calculate_streak(1, [])
+    history = get_assessments()
+    activities_dates = [row[1] for row in history] if history else []
+    streak = gf.calculate_streak(1, activities_dates)
     
     g_col1, g_col2, g_col3 = st.columns(3)
     g_col1.metric("Current Level", f"Lvl {level}")
