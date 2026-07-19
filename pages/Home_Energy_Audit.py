@@ -43,10 +43,57 @@ with st.expander("➕ Add New Appliance", expanded=False):
         app_standby = c6.number_input("Standby Draw (Watts)", min_value=0.0, value=0.0)
 
         submit_app = st.form_submit_button("Add Appliance")
-        if submit_app and app_name:
-            db.add_appliance(app_name, app_cat, app_qty, app_power, app_hours, app_standby)
-            st.success(f"Added {app_name}")
-            st.rerun()
+
+if submit_app:
+    errors = []
+
+    # Validate appliance name
+    if not app_name.strip():
+        errors.append("Please enter an appliance name.")
+
+    # Check for duplicate appliance
+    existing_appliances = db.get_appliances()
+    duplicate = any(
+        appliance["name"].strip().lower() == app_name.strip().lower()
+        for appliance in existing_appliances
+    )
+
+    if duplicate:
+        errors.append("An appliance with this name already exists.")
+
+    # Validate power rating
+    if app_power <= 0:
+        errors.append("Power rating must be greater than 0 W.")
+    elif app_power > 10000:
+        errors.append("Power rating cannot exceed 10,000 W.")
+
+    # Validate usage hours
+    if app_hours <= 0:
+        errors.append("Hours used per day must be greater than 0.")
+    elif app_hours > 24:
+        errors.append("Hours used per day cannot exceed 24.")
+
+    # Validate quantity
+    if app_qty <= 0:
+        errors.append("Quantity must be at least 1.")
+    elif app_qty > 100:
+        errors.append("Quantity cannot exceed 100.")
+
+    # Show errors or save appliance
+    if errors:
+        for error in errors:
+            st.error(error)
+    else:
+        db.add_appliance(
+            app_name.strip(),
+            app_cat,
+            app_qty,
+            app_power,
+            app_hours,
+            app_standby
+        )
+        st.success(f"Added {app_name.strip()}")
+        st.rerun()
 
 appliances = db.get_appliances()
 if appliances:
