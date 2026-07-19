@@ -1,6 +1,7 @@
+import os
 import sqlite3
 
-DB_NAME = "eco_buddy.db"
+DB_NAME = os.getenv("ECO_BUDDY_DB", "eco_buddy.db")
 
 
 def init_db():
@@ -577,6 +578,21 @@ def delete_offset_transaction(transaction_id):
         if conn:
             conn.close()
 
+def clear_offset_transactions(user_id):
+    conn = None
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM offset_transactions WHERE user_id = ?', (user_id,))
+        conn.commit()
+        return True
+    except Exception:
+        return False
+    finally:
+        if conn:
+            conn.close()
+
 def get_total_offsets(user_id):
     conn = None
     try:
@@ -603,6 +619,72 @@ def get_total_spend(user_id):
         return total if total else 0.0
     except Exception:
         return 0.0
+    finally:
+        if conn:
+            conn.close()
+
+def init_water_db():
+    conn = None
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS water_consumption (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL DEFAULT 1,
+                shower_mins_per_day REAL,
+                laundry_loads_per_week REAL,
+                dishwasher_runs_per_week REAL,
+                garden_mins_per_week REAL,
+                diet TEXT,
+                total_liters REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f'Database water init error: {e}')
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+def save_water_assessment(user_id, shower, laundry, dishwasher, garden, diet, total_liters):
+    conn = None
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            INSERT INTO water_consumption (user_id, shower_mins_per_day, laundry_loads_per_week, dishwasher_runs_per_week, garden_mins_per_week, diet, total_liters)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (user_id, shower, laundry, dishwasher, garden, diet, total_liters))
+        
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f'save_water_assessment error: {e}')
+        return False
+    finally:
+        if conn:
+            conn.close()
+
+def get_water_assessments(user_id):
+    conn = None
+    try:
+        import sqlite3
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM water_consumption WHERE user_id = ? ORDER BY created_at DESC', (user_id,))
+        columns = [column[0] for column in cursor.description]
+        data = cursor.fetchall()
+        return [dict(zip(columns, row)) for row in data]
+    except Exception:
+        return []
     finally:
         if conn:
             conn.close()

@@ -1,3 +1,4 @@
+import streamlit as st
 import pandas as pd
 
 # Emissions factors (kg CO2e per passenger-km)
@@ -101,6 +102,7 @@ OFFSET_PROJECTS = [
     }
 ]
 
+@st.cache_data
 def calculate_trip_emissions(distance_km: float, transport_mode: str, passenger_count: int = 1) -> float:
     """Calculates emissions for a single trip in kg CO2e."""
     if distance_km < 0 or passenger_count < 1:
@@ -124,6 +126,7 @@ def calculate_trip_emissions(distance_km: float, transport_mode: str, passenger_
     trip_emissions = distance_km * factor
     return round(trip_emissions, 2)
 
+@st.cache_data
 def calculate_recurring_trip_emissions(trip_emissions: float, trips_per_week: int) -> dict:
     """Calculates weekly, monthly, and annual emissions based on trip frequency."""
     weekly = trip_emissions * trips_per_week
@@ -136,6 +139,7 @@ def calculate_recurring_trip_emissions(trip_emissions: float, trips_per_week: in
         "annual": round(annual, 2)
     }
 
+@st.cache_data
 def compare_transit_modes(distance_km: float, passenger_count: int = 1) -> list:
     """Compares emissions across all supported transit modes for a given distance."""
     results = []
@@ -164,12 +168,14 @@ def get_project_by_id(project_id: str) -> dict:
             return p
     return None
 
+@st.cache_data
 def calculate_offset_cost(tonnes: float, cost_per_tonne: float) -> float:
     """Calculates the total cost for offsetting a given amount of carbon."""
     if tonnes < 0:
         raise ValueError("Offset amount cannot be negative.")
     return round(tonnes * cost_per_tonne, 2)
 
+@st.cache_data
 def validate_offset_transaction(tonnes: float, available_capacity: float = None) -> bool:
     """Validates if an offset transaction is valid."""
     if tonnes <= 0:
@@ -178,11 +184,13 @@ def validate_offset_transaction(tonnes: float, available_capacity: float = None)
         return False, f"Requested offset ({tonnes}t) exceeds project capacity ({available_capacity}t)."
     return True, "Valid transaction"
 
+@st.cache_data
 def calculate_net_emissions(estimated_lifetime_footprint: float, total_offsets_purchased: float) -> float:
     """Calculates remaining footprint after offsets."""
     net = estimated_lifetime_footprint - total_offsets_purchased
     return round(max(0.0, net), 2) # Cannot be less than 0 for display purposes
 
+@st.cache_data
 def calculate_net_zero_progress(estimated_lifetime_footprint: float, total_offsets_purchased: float) -> float:
     """Calculates percentage progress towards net-zero."""
     if estimated_lifetime_footprint <= 0:

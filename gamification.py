@@ -1,5 +1,6 @@
 import math
 import os
+import streamlit as st
 import datetime
 from PIL import Image, ImageDraw, ImageFont
 
@@ -24,11 +25,13 @@ BADGES = {
     'b4': {'name': 'Plant-Based Week', 'desc': 'Avoided non-vegetarian meals for 7 days', 'xp': 50}
 }
 
+@st.cache_data
 def calculate_level(total_xp):
     if total_xp < 0:
         return 1
     return math.floor(math.sqrt(total_xp / 100)) + 1
 
+@st.cache_data
 def calculate_level_progress(total_xp):
     current_level = calculate_level(total_xp)
     next_level = current_level + 1
@@ -45,30 +48,52 @@ def calculate_level_progress(total_xp):
          
     return progress
 
+@st.cache_data
 def calculate_streak(user_id, activities_dates):
-    # Simplified streak calculation
-    # activities_dates should be a sorted list of unique date strings or dates
+    # Adjust check to allow yesterday's log to keep streak alive (#86).
+    # If the most recent log was yesterday, the streak remains active;
+    # only reset if the last log was more than 1 day ago.
     if not activities_dates:
         return 0
-        
-    streak = 0
-    today = datetime.date.today()
-    
-    for i in range(len(activities_dates)):
-        # Assuming dates are parsed or already date objects
-        date = activities_dates[len(activities_dates) - 1 - i]
+
+    # Parse and standardise all entries to datetime.date objects
+    parsed_dates = []
+    for date in activities_dates:
         if isinstance(date, str):
             try:
-                date = datetime.datetime.strptime(date.split(' ')[0], '%Y-%m-%d').date()
+                parsed_date = datetime.datetime.strptime(date.split(' ')[0], '%Y-%m-%d').date()
+                parsed_dates.append(parsed_date)
             except ValueError:
                 continue
-                
-        diff = (today - date).days
-        if diff == streak: # Action done today, or consecutive
+        elif isinstance(date, datetime.datetime):
+            parsed_dates.append(date.date())
+        elif isinstance(date, datetime.date):
+            parsed_dates.append(date)
+
+    if not parsed_dates:
+        return 0
+
+    # Remove duplicates and sort descending (most recent first)
+    unique_dates = sorted(list(set(parsed_dates)), reverse=True)
+
+    today = datetime.date.today()
+    most_recent = unique_dates[0]
+
+    days_since_last = (today - most_recent).days
+    if days_since_last > 1:
+        return 0  # Streak is broken (last log was before yesterday)
+
+    # Count backwards from the most recent activity
+    streak = 1
+    curr_date = most_recent
+    for i in range(1, len(unique_dates)):
+        next_date = unique_dates[i]
+        if (curr_date - next_date).days == 1:
             streak += 1
-        elif diff > streak:
-            break
-            
+            curr_date = next_date
+        elif (curr_date - next_date).days > 1:
+            break  # Gap detected
+
     return streak
 
 def validate_challenge_progress(user_id, challenge_id):
@@ -128,15 +153,24 @@ def generate_achievement_card(user_id, badge_id, filename="badge_card.png"):
     draw = ImageDraw.Draw(img)
     
     # Try to load fonts
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    font_path = os.path.join(base_dir, "assets", "fonts", "DejaVuSans.ttf")
+    
     try:
-        title_font = ImageFont.truetype("arial.ttf", 36)
-        desc_font = ImageFont.truetype("arial.ttf", 24)
-        brand_font = ImageFont.truetype("arial.ttf", 20)
+        title_font = ImageFont.truetype(font_path, 36)
+        desc_font = ImageFont.truetype(font_path, 24)
+        brand_font = ImageFont.truetype(font_path, 20)
     except IOError:
-        # Fallback to default font
-        title_font = ImageFont.load_default()
-        desc_font = ImageFont.load_default()
-        brand_font = ImageFont.load_default()
+        try:
+            # Fallback to system Arial font if bundled font is somehow missing
+            title_font = ImageFont.truetype("arial.ttf", 36)
+            desc_font = ImageFont.truetype("arial.ttf", 24)
+            brand_font = ImageFont.truetype("arial.ttf", 20)
+        except IOError:
+            # Fallback to default font
+            title_font = ImageFont.load_default()
+            desc_font = ImageFont.load_default()
+            brand_font = ImageFont.load_default()
         
     total_xp = get_total_xp(user_id)
     level = calculate_level(total_xp)
