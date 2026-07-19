@@ -678,18 +678,11 @@ st.markdown("---")
 # -------------------------
 # TABS CONFIGURATION
 # -------------------------
-col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
+col_btn1, col_btn2 = st.columns([1, 3])
 
 with col_btn1:
     reset_btn = st.button(
         "🔄 Reset Assessment",
-        use_container_width=True
-    )
-
-with col_btn2:
-    st.caption("✔ All input fields are validated before analysis.")
-    analyze_btn = st.button(
-        "🌿 Analyze My Impact",
         use_container_width=True
     )
 
