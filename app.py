@@ -694,6 +694,11 @@ st.markdown("---")
 =======
 st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
+<<<<<<< HEAD
+=======
+    
+
+>>>>>>> 2590586 (feat: add reset assessment and improve analysis workflow)
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -754,29 +759,38 @@ with col3:
 >>>>>>> 7430caf (feat: add reset assessment button with default form restoration)
 
 # -------------------------
+<<<<<<< HEAD
+=======
+# PDF REPORT GENERATION
+
+# -------------------------
+>>>>>>> 2590586 (feat: add reset assessment and improve analysis workflow)
 # TABS CONFIGURATION
 # -------------------------
- feature/input-validation-and-error-handling
+
 col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
 
 with col_btn1:
     reset_btn = st.button(
         "🔄 Reset Assessment",
-        use_container_width=True
+        use_container_width=True,
+        key="reset_btn"
     )
 
 with col_btn2:
+<<<<<<< HEAD
 HEAD
     st.caption("✔ All input fields are validated before analysis.")
     analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
+=======
+>>>>>>> 2590586 (feat: add reset assessment and improve analysis workflow)
     analyze_btn = st.button(
         "🌿 Analyze My Impact",
-        use_container_width=True
+        use_container_width=True,
+        key="analyze_btn"
     )
 
-
 if reset_btn:
-
     for key in DEFAULT_VALUES:
         if key in st.session_state:
             del st.session_state[key]
@@ -784,13 +798,23 @@ if reset_btn:
     st.success("✅ Assessment form has been reset.")
     st.rerun()
 
+<<<<<<< HEAD
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
+=======
+st.caption("✔ All input fields are validated before analysis.")
+    
+ 
+
+tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
+ 
+>>>>>>> 2590586 (feat: add reset assessment and improve analysis workflow)
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
+<<<<<<< HEAD
  
     with st.spinner("🌍 Analyzing your carbon footprint..."):
 
@@ -866,6 +890,8 @@ with tab1:
         flights = st.number_input("Annual Flights", min_value=0, value=0, step=1)
         st.info("💡 How many long-distance flights per year?")
 
+=======
+>>>>>>> 2590586 (feat: add reset assessment and improve analysis workflow)
 
     # -------------------------
     # PDF REPORT GENERATION
@@ -894,10 +920,7 @@ with tab1:
     # -------------------------
     # CALCULATE & ANALYZE
     # -------------------------
-    col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
-    with col_btn2:
-        analyze_btn = st.button("🌿 Analyze My Impact", width="stretch")
-
+    
     if analyze_btn:
 
         with st.spinner("🌍 Analyzing your carbon footprint..."):
@@ -1313,20 +1336,20 @@ with tab1:
         # HISTORY TABLE
         # -------------------------
         st.markdown("<div style='font-size: 22px; font-weight: 800; background: linear-gradient(135deg, #4ade80, #86efac); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 16px;'>📋 Assessment History</div>", unsafe_allow_html=True)
+        with st.expander("📂 View Assessment History", expanded=False):
+            # Create a nice table display
+            display_df = df[["date", "transport", "electricity", "footprint", "eco_score"]].copy()
+            display_df.columns = ["📅 Date", "🚗 Transport", "⚡ Electricity (kWh)", "🌍 Footprint (kg CO₂)", "🏆 Score"]
+            display_df = display_df.iloc[::-1].reset_index(drop=True)
 
-        # Create a nice table display
-        display_df = df[["date", "transport", "electricity", "footprint", "eco_score"]].copy()
-        display_df.columns = ["📅 Date", "🚗 Transport", "⚡ Electricity (kWh)", "🌍 Footprint (kg CO₂)", "🏆 Score"]
-        display_df = display_df.iloc[::-1].reset_index(drop=True)
+            st.markdown(
+                "<div class='history-table-wrap'>"
+                + display_df.to_html(index=False, classes="history-table", border=0)
+                + "</div>",
+                unsafe_allow_html=True
+            )
 
-        st.markdown(
-            "<div class='history-table-wrap'>"
-            + display_df.to_html(index=False, classes="history-table", border=0)
-            + "</div>",
-            unsafe_allow_html=True
-        )
-
-        st.markdown("---")
+            st.markdown("---")
 
         # -------------------------
         # STATS & INSIGHTS
