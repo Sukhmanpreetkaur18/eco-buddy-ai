@@ -424,12 +424,18 @@ st.markdown("""
             linear-gradient(135deg, rgba(74, 222, 128, 0.08), transparent);
         border-color: var(--line);
         box-shadow: var(--shadow);
+        min-height: 230px;
+        display: flex;
+        flex-direction: column;
     }
 
     .card-highlight {
         background:
             linear-gradient(145deg, rgba(13, 36, 25, 0.92), rgba(12, 18, 32, 0.84)),
             linear-gradient(135deg, rgba(74, 222, 128, 0.14), transparent);
+            min-height: 230px;
+            display: flex;
+            flex-direction: column;
     }
 
     .metric-card::before,
@@ -691,15 +697,13 @@ st.markdown("---")
 
 
 # -------------------------
- feature/input-validation-and-error-handling
 # INPUTS SECTION
 # -------------------------
- HEAD
+ 
 
 st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
- HEAD
 
- 2590586 (feat: add reset assessment and improve analysis workflow)
+ 
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -757,15 +761,13 @@ with col3:
     )
     st.info("💡 How many long-distance flights per year?")
 
- 7430caf (feat: add reset assessment button with default form restoration)
 
-# -------------------------
- HEAD
+
+# ------------------------
 
 # PDF REPORT GENERATION
 
 # -------------------------
- 2590586 (feat: add reset assessment and improve analysis workflow)
 # TABS CONFIGURATION
 # -------------------------
 
@@ -779,12 +781,11 @@ with col_btn1:
     )
 
 with col_btn2:
- HEAD
-HEAD
+ 
     st.caption("✔ All input fields are validated before analysis.")
-    analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
+    
 
-2590586 (feat: add reset assessment and improve analysis workflow)
+
     analyze_btn = st.button(
         "🌿 Analyze My Impact",
         use_container_width=True,
@@ -799,7 +800,7 @@ if reset_btn:
     st.success("✅ Assessment form has been reset.")
     st.rerun()
 
- HEAD
+ 
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
@@ -810,12 +811,12 @@ st.caption("✔ All input fields are validated before analysis.")
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
  
- 2590586 (feat: add reset assessment and improve analysis workflow)
+ 
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
- HEAD
+ 
  
     with st.spinner("🌍 Analyzing your carbon footprint..."):
 
@@ -829,7 +830,7 @@ with tab1:
 # TABS CONFIGURATION
 # -------------------------
 col_btn1, col_btn2 = st.columns([1, 3])
- main
+ 
 
 with col_btn1:
     reset_btn = st.button(
@@ -891,9 +892,7 @@ with tab1:
                 st.rerun()
 
     col1, col2, col3 = st.columns(3)
- feature/input-validation-and-error-handling
-
- main
+ 
     with col1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
@@ -956,12 +955,8 @@ with tab1:
         st.info("💡 How many long-distance flights per year?")
         
 
- feature/input-validation-and-error-handling
- 2590586 (feat: add reset assessment and improve analysis workflow)
 
     # -------------------------
-
-     main
     # PDF REPORT GENERATION
     # -------------------------
     def generate_pdf(total, eco_score, insight):
@@ -988,7 +983,7 @@ with tab1:
     # -------------------------
     # CALCULATE & ANALYZE
     # -------------------------
-feature/input-validation-and-error-handling
+
     
 
     # col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
@@ -1007,7 +1002,7 @@ feature/input-validation-and-error-handling
     with col_btn2:
         analyze_btn = st.button("🌿 Analyze My Impact")
 
- main
+ 
     if analyze_btn:
 
         with st.spinner("🌍 Analyzing your carbon footprint..."):
