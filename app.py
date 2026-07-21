@@ -193,13 +193,16 @@ st.markdown("""
         border-radius: var(--radius);
         background: rgba(255,255,255,0.9);
         border: 1px solid #e5e7eb;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
         box-shadow: 0 18px 50px rgba(57, 86, 47, 0.12);
         backdrop-filter: blur(18px);
         position: relative;
         overflow: hidden;
         animation: fadeUp 700ms ease both;
         transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+
+        min-height: 170px;
+        display: flex;
+        flex-direction: column;
     }
 
     .input-section {
@@ -212,6 +215,7 @@ st.markdown("""
     .metric-card {
         padding: 26px;
         margin-bottom: 16px;
+        justify-content: space-between;
     }
 
     .metric-card::before,
@@ -695,6 +699,7 @@ st.markdown("---")
 # -------------------------
 
 st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
+ main
  
 col1, col2, col3 = st.columns(3)
 
@@ -753,6 +758,9 @@ with col3:
     )
     st.info("💡 How many long-distance flights per year?")
 
+ feature/standardize-statistics-card-dimensions
+
+
  
 
 # -------------------------
@@ -771,10 +779,15 @@ with col_btn1:
     )
 
 with col_btn2:
+feature/standardize-statistics-card-dimensions
+    st.caption("✔ All input fields are validated before analysis.")
+    
+
 
     st.caption("✔ All input fields are validated before analysis.")
     
 
+     main
     analyze_btn = st.button(
         "🌿 Analyze My Impact",
         use_container_width=True,
@@ -791,6 +804,8 @@ if reset_btn:
 
  
 
+
+
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
 
@@ -800,12 +815,19 @@ st.caption("✔ All input fields are validated before analysis.")
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
  
+ feature/standardize-statistics-card-dimensions
+
+
  
+ main
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
+ feature/standardize-statistics-card-dimensions
+ 
 
+ main
  
     with st.spinner("🌍 Analyzing your carbon footprint..."):
 
@@ -946,7 +968,7 @@ with tab1:
         
 
  
-
+ 
 
     # -------------------------
     # PDF REPORT GENERATION
@@ -975,6 +997,8 @@ with tab1:
     # -------------------------
     # CALCULATE & ANALYZE
     # -------------------------
+
+ 
 
 
     # col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
