@@ -103,7 +103,7 @@ st.markdown("""
 
     :root {
         --ink: #111827;
-        --muted: #6b7280;
+        --muted: #1f2937;
         --paper: rgba(255,255,255,0.75);
         --paper-strong: rgba(255,255,255,0.95);
         --line: rgba(0,0,0,0.08);
@@ -498,8 +498,8 @@ st.markdown("""
         border-color: var(--line) !important;
     }
 
-    [style*="#d1d5db"],
-    [style*="#9ca3af"],
+    [style*="#374151"],
+    [style*="#4b5563"],
     [style*="rgb(209, 213, 219)"],
     [style*="rgb(156, 163, 175)"] {
         color: var(--muted) !important;
@@ -628,7 +628,7 @@ st.markdown("""
     }
 
     button[data-baseweb="tab"] > div[data-testid="stMarkdownContainer"] > p {
-        color: #d1d5db !important;
+        color: #374151 !important;
         font-weight: 600 !important;
     }
     
@@ -667,7 +667,7 @@ st.markdown("""
     
     [data-testid="stExpanderDetails"] {
         background-color: #0f172a !important;
-        color: #d1d5db !important;
+        color: #374151 !important;
     }
     } /* end @media (prefers-color-scheme: dark) */
 </style>
@@ -691,15 +691,13 @@ st.markdown("---")
 
 
 # -------------------------
- feature/input-validation-and-error-handling
 # INPUTS SECTION
 # -------------------------
- HEAD
+
 
 st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
- HEAD
+ 
 
- 2590586 (feat: add reset assessment and improve analysis workflow)
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -757,15 +755,11 @@ with col3:
     )
     st.info("💡 How many long-distance flights per year?")
 
- 7430caf (feat: add reset assessment button with default form restoration)
+ 
 
 # -------------------------
- HEAD
-
 # PDF REPORT GENERATION
-
 # -------------------------
- 2590586 (feat: add reset assessment and improve analysis workflow)
 # TABS CONFIGURATION
 # -------------------------
 
@@ -779,12 +773,11 @@ with col_btn1:
     )
 
 with col_btn2:
- HEAD
-HEAD
-    st.caption("✔ All input fields are validated before analysis.")
-    analyze_btn = st.button("🌿 Analyze My Impact", use_container_width=True)
 
-2590586 (feat: add reset assessment and improve analysis workflow)
+    st.caption("✔ All input fields are validated before analysis.")
+    
+
+
     analyze_btn = st.button(
         "🌿 Analyze My Impact",
         use_container_width=True,
@@ -799,7 +792,7 @@ if reset_btn:
     st.success("✅ Assessment form has been reset.")
     st.rerun()
 
- HEAD
+ 
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
 
@@ -810,12 +803,12 @@ st.caption("✔ All input fields are validated before analysis.")
 
 tab1, tab2, tab3, tab4 = st.tabs(["🌍 Carbon Footprint", "⚡ Home Energy Audit", "🎮 Gamification", "🗺️ Route Planning & Offsets"])
  
- 2590586 (feat: add reset assessment and improve analysis workflow)
+ 
 
 with tab1:
     st.markdown("<div class='section-header'>📝 Your Lifestyle Profile</div>", unsafe_allow_html=True)
 
- HEAD
+ 
  
     with st.spinner("🌍 Analyzing your carbon footprint..."):
 
@@ -829,7 +822,7 @@ with tab1:
 # TABS CONFIGURATION
 # -------------------------
 col_btn1, col_btn2 = st.columns([1, 3])
- main
+ 
 
 with col_btn1:
     reset_btn = st.button(
@@ -891,9 +884,9 @@ with tab1:
                 st.rerun()
 
     col1, col2, col3 = st.columns(3)
- feature/input-validation-and-error-handling
+ 
 
- main
+ 
     with col1:
         st.markdown("""
         <div style='display: flex; align-items: center; gap: 8px; margin-bottom: 16px;'>
@@ -956,12 +949,9 @@ with tab1:
         st.info("💡 How many long-distance flights per year?")
         
 
- feature/input-validation-and-error-handling
- 2590586 (feat: add reset assessment and improve analysis workflow)
+ 
 
     # -------------------------
-
-     main
     # PDF REPORT GENERATION
     # -------------------------
     def generate_pdf(total, eco_score, insight):
@@ -988,7 +978,7 @@ with tab1:
     # -------------------------
     # CALCULATE & ANALYZE
     # -------------------------
-feature/input-validation-and-error-handling
+
     
 
     # col_btn1, col_btn2, col_btn3 = st.columns([1, 1.5, 1])
@@ -1007,7 +997,7 @@ feature/input-validation-and-error-handling
     with col_btn2:
         analyze_btn = st.button("🌿 Analyze My Impact")
 
- main
+
     if analyze_btn:
 
         with st.spinner("🌍 Analyzing your carbon footprint..."):
@@ -1036,36 +1026,36 @@ feature/input-validation-and-error-handling
         with met1:
             st.markdown("""
             <div class='metric-card'>
-                <div style='font-size: 14px; color: #d1d5db; margin-bottom: 8px;'>🌍 Total Footprint</div>
+                <div style='font-size: 14px; color: #374151; margin-bottom: 8px;'>🌍 Total Footprint</div>
                 <div style='font-size: 36px; font-weight: 900; color: #4ade80;'>{:.0f}</div>
-                <div style='font-size: 12px; color: #9ca3af;'>kg CO₂/year</div>
+                <div style='font-size: 12px; color: #4b5563;'>kg CO₂/year</div>
             </div>
             """.format(total), unsafe_allow_html=True)
 
         with met2:
             st.markdown("""
             <div class='metric-card'>
-                <div style='font-size: 14px; color: #d1d5db; margin-bottom: 8px;'>🏆 Eco Score</div>
+                <div style='font-size: 14px; color: #374151; margin-bottom: 8px;'>🏆 Eco Score</div>
                 <div style='font-size: 36px; font-weight: 900; color: #4ade80;'>{}</div>
-                <div style='font-size: 12px; color: #9ca3af;'>out of 100</div>
+                <div style='font-size: 12px; color: #4b5563;'>out of 100</div>
             </div>
             """.format(eco_score), unsafe_allow_html=True)
 
         with met3:
             st.markdown("""
             <div class='metric-card'>
-                <div style='font-size: 14px; color: #d1d5db; margin-bottom: 8px;'>📈 Biggest Impact</div>
+                <div style='font-size: 14px; color: #374151; margin-bottom: 8px;'>📈 Biggest Impact</div>
                 <div style='font-size: 24px; font-weight: 700; color: #4ade80;'>{}</div>
-                <div style='font-size: 12px; color: #9ca3af;'>{:.0f} kg CO₂</div>
+                <div style='font-size: 12px; color: #4b5563;'>{:.0f} kg CO₂</div>
             </div>
             """.format(max(contributors, key=contributors.get), max(contributors.values())), unsafe_allow_html=True)
 
         with met4:
             st.markdown("""
             <div class='metric-card'>
-                <div style='font-size: 14px; color: #d1d5db; margin-bottom: 8px;'>🎯 Status</div>
+                <div style='font-size: 14px; color: #374151; margin-bottom: 8px;'>🎯 Status</div>
                 <div style='font-size: 18px; font-weight: 700; color: #4ade80;'>Active</div>
-                <div style='font-size: 12px; color: #9ca3af;'>Tracking enabled</div>
+                <div style='font-size: 12px; color: #4b5563;'>Tracking enabled</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1098,7 +1088,7 @@ feature/input-validation-and-error-handling
             st.markdown(f"""
             <div style='margin-top: 16px;'>
                 <div style='display: flex; justify-content: space-between; margin-bottom: 6px;'>
-                    <span style='color: #d1d5db; font-size: 14px;'>Score Progress</span>
+                    <span style='color: #374151; font-size: 14px;'>Score Progress</span>
                     <span style='color: #4ade80; font-weight: 700;'>{eco_score}%</span>
                 </div>
                 <div class='progress-bar'>
@@ -1139,7 +1129,7 @@ feature/input-validation-and-error-handling
                 margin=dict(l=0, r=0, t=0, b=0),
                 paper_bgcolor='rgba(0,0,0,0)',
                 plot_bgcolor='rgba(0,0,0,0)',
-                font=dict(color='#d1d5db', size=12),
+                font=dict(color='#374151', size=12),
                 legend=dict(
                     x=-0.15,
                     y=1,
@@ -1179,18 +1169,18 @@ feature/input-validation-and-error-handling
             margin=dict(l=40, r=20, t=20, b=40),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(55, 65, 81, 0.2)',
-            font=dict(color='#d1d5db', size=12),
+            font=dict(color='#374151', size=12),
             xaxis=dict(
                 showgrid=False,
                 zeroline=False,
-                color='#9ca3af'
+                color='#4b5563'
             ),
             yaxis=dict(
                 showgrid=True,
                 gridwidth=1,
                 gridcolor='rgba(74, 222, 128, 0.1)',
                 zeroline=False,
-                color='#9ca3af'
+                color='#4b5563'
             ),
             showlegend=False
         )
@@ -1213,7 +1203,7 @@ feature/input-validation-and-error-handling
                     <div style='font-size: 32px;'>💡</div>
                     <div style='flex: 1;'>
                         <div style='font-size: 16px; font-weight: 800; color: #4ade80; margin-bottom: 12px;'>Key Finding</div>
-                        <div style='font-size: 15px; color: #d1d5db; line-height: 1.8;'>{h(insight)}</div>
+                        <div style='font-size: 15px; color: #374151; line-height: 1.8;'>{h(insight)}</div>
                     </div>
                 </div>
             </div>
@@ -1226,7 +1216,7 @@ feature/input-validation-and-error-handling
                     <div style='font-size: 32px;'>🎯</div>
                     <div style='flex: 1;'>
                         <div style='font-size: 16px; font-weight: 800; color: #4ade80; margin-bottom: 12px;'>Quick Tips</div>
-                        <ul style='color: #d1d5db; font-size: 14px; line-height: 2.2; padding-left: 20px; margin: 0;'>
+                        <ul style='color: #374151; font-size: 14px; line-height: 2.2; padding-left: 20px; margin: 0;'>
                             <li>Start with small daily changes</li>
                             <li>Track progress regularly</li>
                             <li>Share with friends & family</li>
@@ -1251,7 +1241,7 @@ feature/input-validation-and-error-handling
                     <div style='display: flex; gap: 12px;'>
                         <div style='font-size: 24px;'>💚</div>
                         <div style='flex: 1;'>
-                            <div style='font-size: 15px; line-height: 1.8; color: #d1d5db;'>{h(r)}</div>
+                            <div style='font-size: 15px; line-height: 1.8; color: #374151;'>{h(r)}</div>
                         </div>
                     </div>
                 </div>
@@ -1263,7 +1253,7 @@ feature/input-validation-and-error-handling
                     <div style='font-size: 48px;'>🌟</div>
                     <div>
                         <div style='font-size: 18px; font-weight: 700; color: #4ade80; margin-bottom: 4px;'>Excellent Work!</div>
-                        <div style='color: #d1d5db;'>Your lifestyle is already very eco-friendly. Keep maintaining these amazing habits!</div>
+                        <div style='color: #374151;'>Your lifestyle is already very eco-friendly. Keep maintaining these amazing habits!</div>
                     </div>
                 </div>
             </div>
@@ -1317,18 +1307,18 @@ feature/input-validation-and-error-handling
         with stat1:
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 12px; color: #9ca3af;'>Latest Footprint</div>
+                <div style='font-size: 12px; color: #4b5563;'>Latest Footprint</div>
                 <div style='font-size: 28px; font-weight: 900; color: #4ade80;'>{latest[7]:.0f}</div>
-                <div style='font-size: 11px; color: #9ca3af;'>kg CO₂</div>
+                <div style='font-size: 11px; color: #4b5563;'>kg CO₂</div>
             </div>
             """, unsafe_allow_html=True)
 
         with stat2:
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 12px; color: #9ca3af;'>Latest Score</div>
+                <div style='font-size: 12px; color: #4b5563;'>Latest Score</div>
                 <div style='font-size: 28px; font-weight: 900; color: #4ade80;'>{latest[8]}</div>
-                <div style='font-size: 11px; color: #9ca3af;'>out of 100</div>
+                <div style='font-size: 11px; color: #4b5563;'>out of 100</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1352,18 +1342,18 @@ feature/input-validation-and-error-handling
 
                 st.markdown(f"""
                 <div class='card'>
-                    <div style='font-size: 12px; color: #9ca3af;'>{emoji} {label}</div>
+                    <div style='font-size: 12px; color: #4b5563;'>{emoji} {label}</div>
                     <div style='font-size: 28px; font-weight: 900; color: {color};'>{abs(change):.1f}%</div>
-                    <div style='font-size: 11px; color: #9ca3af;'>vs previous</div>
+                    <div style='font-size: 11px; color: #4b5563;'>vs previous</div>
                 </div>
                 """, unsafe_allow_html=True)
 
         with stat4:
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 12px; color: #9ca3af;'>Total Records</div>
+                <div style='font-size: 12px; color: #4b5563;'>Total Records</div>
                 <div style='font-size: 28px; font-weight: 900; color: #4ade80;'>{len(history)}</div>
-                <div style='font-size: 11px; color: #9ca3af;'>assessments</div>
+                <div style='font-size: 11px; color: #4b5563;'>assessments</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1395,7 +1385,7 @@ feature/input-validation-and-error-handling
             margin=dict(l=40, r=20, t=20, b=40),
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(55, 65, 81, 0.2)',
-            font=dict(color='#d1d5db', size=12),
+            font=dict(color='#374151', size=12),
             xaxis=dict(
                 showgrid=False,
                 zeroline=False,
@@ -1450,18 +1440,18 @@ feature/input-validation-and-error-handling
         with stats_col1:
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 13px; color: #9ca3af; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>📊 Average Footprint</div>
+                <div style='font-size: 13px; color: #4b5563; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>📊 Average Footprint</div>
                 <div style='font-size: 36px; font-weight: 900; color: #4ade80;'>{avg_footprint:.0f}</div>
-                <div style='font-size: 12px; color: #9ca3af; margin-top: 8px;'>kg CO₂ across {len(history)} records</div>
+                <div style='font-size: 12px; color: #4b5563; margin-top: 8px;'>kg CO₂ across {len(history)} records</div>
             </div>
             """, unsafe_allow_html=True)
 
         with stats_col2:
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 13px; color: #9ca3af; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>🎯 Average Score</div>
+                <div style='font-size: 13px; color: #4b5563; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>🎯 Average Score</div>
                 <div style='font-size: 36px; font-weight: 900; color: #4ade80;'>{avg_score:.0f}</div>
-                <div style='font-size: 12px; color: #9ca3af; margin-top: 8px;'>out of 100 points</div>
+                <div style='font-size: 12px; color: #4b5563; margin-top: 8px;'>out of 100 points</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1469,9 +1459,9 @@ feature/input-validation-and-error-handling
             range_val = max_footprint - min_footprint
             st.markdown(f"""
             <div class='card'>
-                <div style='font-size: 13px; color: #9ca3af; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>📈 Range Variation</div>
+                <div style='font-size: 13px; color: #4b5563; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;'>📈 Range Variation</div>
                 <div style='font-size: 28px; font-weight: 700; color: #4ade80;'>{min_footprint:.0f}</div>
-                <div style='font-size: 14px; color: #9ca3af;'>to</div>
+                <div style='font-size: 14px; color: #4b5563;'>to</div>
                 <div style='font-size: 28px; font-weight: 700; color: #4ade80;'>{max_footprint:.0f}</div>
             </div>
             """, unsafe_allow_html=True)
@@ -1482,7 +1472,7 @@ feature/input-validation-and-error-handling
             <div style='text-align: center; padding: 48px 32px;'>
                 <div style='font-size: 72px; margin-bottom: 20px; animation: bounce 2s infinite;'>🌱</div>
                 <div style='font-size: 26px; font-weight: 800; background: linear-gradient(135deg, #22c55e, #4ade80); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 12px;'>No Data Yet</div>
-                <div style='color: #d1d5db; font-size: 16px; line-height: 1.6; max-width: 400px; margin: 0 auto;'>
+                <div style='color: #374151; font-size: 16px; line-height: 1.6; max-width: 400px; margin: 0 auto;'>
                     Start your eco journey! Complete the lifestyle profile above and click "Analyze My Impact" to generate your personalized carbon footprint report.
                 </div>
             </div>
@@ -2016,7 +2006,7 @@ st.markdown("""
 }
 
 .footer-bottom{
-    color:#9CA3AF;
+    color:#4b5563;
     font-size:14px;
 }
 </style>
