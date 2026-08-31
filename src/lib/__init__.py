@@ -470,3 +470,21 @@ __all__ = [
     'get_user_alerts'
     'get_user_items'
 ]
+
+# Add to existing imports
+from .investment_tracker import InvestmentTracker, Investment, InvestmentPortfolio, InvestmentGoal
+from .savings_calculator import SavingsCalculator
+from .impact_calculator import ImpactCalculator
+from .investment_reports import InvestmentReports
+
+# Update __all__
+__all__ = [
+    # ... existing exports ...
+    'InvestmentTracker',
+    'Investment',
+    'InvestmentPortfolio',
+    'InvestmentGoal',
+    'SavingsCalculator',
+    'ImpactCalculator',
+    'InvestmentReports'
+]
