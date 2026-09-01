@@ -470,3 +470,22 @@ __all__ = [
     'get_user_alerts'
     'get_user_items'
 ]
+
+# Add to existing imports
+from .challenge_calendar import ChallengeCalendar, ChallengeDay, ChallengeMonth
+from .challenge_generator import ChallengeGenerator
+from .streak_tracker import StreakTracker, StreakData
+from .challenge_rewards import ChallengeRewards, Reward
+
+# Update __all__
+__all__ = [
+    # ... existing exports ...
+    'ChallengeCalendar',
+    'ChallengeDay',
+    'ChallengeMonth',
+    'ChallengeGenerator',
+    'StreakTracker',
+    'StreakData',
+    'ChallengeRewards',
+    'Reward'
+]
