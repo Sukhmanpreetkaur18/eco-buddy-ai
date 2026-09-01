@@ -476,6 +476,12 @@ from .water_calculator import WaterCalculator, WaterActivity, WaterFootprint
 from .water_tips import WaterTips
 from .water_analytics import WaterAnalytics
 
+from .challenge_calendar import ChallengeCalendar, ChallengeDay, ChallengeMonth
+from .challenge_generator import ChallengeGenerator
+from .streak_tracker import StreakTracker, StreakData
+from .challenge_rewards import ChallengeRewards, Reward
+
+
 # Update __all__
 __all__ = [
     # ... existing exports ...
@@ -484,4 +490,12 @@ __all__ = [
     'WaterFootprint',
     'WaterTips',
     'WaterAnalytics'
+    'ChallengeCalendar',
+    'ChallengeDay',
+    'ChallengeMonth',
+    'ChallengeGenerator',
+    'StreakTracker',
+    'StreakData',
+    'ChallengeRewards',
+    'Reward'
 ]
