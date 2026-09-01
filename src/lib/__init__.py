@@ -471,10 +471,16 @@ __all__ = [
     'get_user_items'
 ]
 
-# Add to existing imports
+# Add to existing imports 
 from .water_calculator import WaterCalculator, WaterActivity, WaterFootprint
 from .water_tips import WaterTips
 from .water_analytics import WaterAnalytics
+
+
+from .investment_tracker import InvestmentTracker, Investment, InvestmentPortfolio, InvestmentGoal
+from .savings_calculator import SavingsCalculator
+from .impact_calculator import ImpactCalculator
+from .investment_reports import InvestmentReports
 
 from .challenge_calendar import ChallengeCalendar, ChallengeDay, ChallengeMonth
 from .challenge_generator import ChallengeGenerator
@@ -485,11 +491,22 @@ from .challenge_rewards import ChallengeRewards, Reward
 # Update __all__
 __all__ = [
     # ... existing exports ...
+ 
     'WaterCalculator',
     'WaterActivity',
     'WaterFootprint',
     'WaterTips',
     'WaterAnalytics'
+
+
+    'InvestmentTracker',
+    'Investment',
+    'InvestmentPortfolio',
+    'InvestmentGoal',
+    'SavingsCalculator',
+    'ImpactCalculator',
+    'InvestmentRepo
+ 
     'ChallengeCalendar',
     'ChallengeDay',
     'ChallengeMonth',
