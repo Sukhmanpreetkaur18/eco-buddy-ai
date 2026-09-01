@@ -476,15 +476,28 @@ from .investment_tracker import InvestmentTracker, Investment, InvestmentPortfol
 from .savings_calculator import SavingsCalculator
 from .impact_calculator import ImpactCalculator
 from .investment_reports import InvestmentReports
+from .challenge_calendar import ChallengeCalendar, ChallengeDay, ChallengeMonth
+from .challenge_generator import ChallengeGenerator
+from .streak_tracker import StreakTracker, StreakData
+from .challenge_rewards import ChallengeRewards, Reward
 
 # Update __all__
 __all__ = [
     # ... existing exports ...
+
     'InvestmentTracker',
     'Investment',
     'InvestmentPortfolio',
     'InvestmentGoal',
     'SavingsCalculator',
     'ImpactCalculator',
-    'InvestmentReports'
+    'InvestmentRepo
+    'ChallengeCalendar',
+    'ChallengeDay',
+    'ChallengeMonth',
+    'ChallengeGenerator',
+    'StreakTracker',
+    'StreakData',
+    'ChallengeRewards',
+    'Reward'
 ]
